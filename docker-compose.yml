@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:12
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    env_file:
+      - ./sxj_quiz/postgres_keys.env
+      
+  webserver:
+    build: ./nginx/
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    volumes:
+      - ./sxj_quiz/staticfiles/:/home/static
+
+    
+
+  web:
+    tty: true
+    build: ./sxj_quiz
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    env_file:
+      - ./sxj_quiz/.env
+    command: ./setup.sh
+
+volumes:
+  db_data:
+
