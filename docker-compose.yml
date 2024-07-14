@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   db:
@@ -10,17 +10,6 @@ services:
       - db_data:/var/lib/postgresql/data
     env_file:
       - ./sxj_quiz/postgres_keys.env
-      
-  webserver:
-    build: ./nginx/
-    ports:
-      - "80:80"
-    depends_on:
-      - db
-    volumes:
-      - ./sxj_quiz/staticfiles/:/home/static
-
-    
 
   web:
     tty: true
@@ -33,6 +22,16 @@ services:
       - ./sxj_quiz/.env
     command: ./setup.sh
 
+  webserver:
+    build: ./nginx/
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+      - web
+    volumes:
+      - ./sxj_quiz/staticfiles/:/home/static
+
+
 volumes:
   db_data:
-

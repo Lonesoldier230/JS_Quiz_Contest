@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Joint School Quiz Contest</title>
+    <link rel="stylesheet" href="{% static "app.css" %}" />
+  </head>
+  <body>
+    <div class="container.rules">
+      <div id="home" class="flex-center flex-column"><br><br><br>
+        <h1>Joint School Quiz Contest 2024-2025</h1>
+        <h3>Thursday, August 15, 2024 (Shrawan 31, 2081)</h3><br><br><br><br><br><br><br><br><br><br><br><br>
+        <a class="btn" href="{% url "game" %}">START QUIZ</a>
+        <a class="btn" href="highscores.html">RULES</a>
+      </div>
+    </div>
+  </body>
+</html>
