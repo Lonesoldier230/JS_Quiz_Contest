@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static "style/styles.css" %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Round Rules</title>
+</head>
+<body class="body">
+    <div class="container">
+        <h1>Round 1</h1>
+        <p><h1>Rules for General Round</h1><br>
+        <ol>
+            {% for i in rules %}
+                <li><h1>{{i}}</h1></li>
+            {% endfor %}
+        </ol>
+        <a href="{% url "round:main"%}" class="button">Start Round 1</a>
+        <a href="{% url "round:main"%}" class="button">Back to Rounds</a>
+    </div>
+</body>
+</html>

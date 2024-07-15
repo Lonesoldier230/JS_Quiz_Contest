@@ -1,15 +1,17 @@
-from django.views import View
 from django.shortcuts import render
-from django.http import JsonResponse, HttpResponse
-from django.urls import reverse, reverse_lazy
+from django.contrib.staticfiles import finders
+import json
 
-class Home(View):
-    def get(self, request):
-        return render(request, "index.html")
+def home(request):
+    return render(request, "index.html")
+
+def rules(request, parse):
+    path = finders.find("json/rules.json")
+    with open(path , 'r') as js:
+        rules = json.load(js)
+
+    ctxt = {
+        "rules":rules[f"rules{parse}"]
+    }
     
-class Game(View):
-    def get(self, request):
-        ctxt = {
-            "var":"hello world"
-        }
-        return render(request, "game.html",context=ctxt)
+    return render(request, "rules.html", context=ctxt)
