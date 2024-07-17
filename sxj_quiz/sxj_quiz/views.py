@@ -11,7 +11,8 @@ def rules(request, parse):
         rules = json.load(js)
 
     ctxt = {
-        "rules":rules[f"rules{parse}"]
+        "rules":rules[f"rules{parse}"],
+        "round":parse
     }
     
     return render(request, "rules.html", context=ctxt)
