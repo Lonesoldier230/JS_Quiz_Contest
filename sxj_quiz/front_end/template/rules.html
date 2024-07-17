@@ -16,7 +16,7 @@
                 <li><h1>{{i}}</h1></li>
             {% endfor %}
         </ol>
-        <a href="{% url "round:main"%}" class="button">Start Round 1</a>
+        <a href="{% url "round:main"%}" class="button">Start Round {{round}}</a>
         <a href="{% url "round:main"%}" class="button">Back to Rounds</a>
     </div>
 </body>
