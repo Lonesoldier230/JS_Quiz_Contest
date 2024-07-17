@@ -1,16 +1,50 @@
+<!-- quiz_page.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Rounds</title>
-    <script src="scriptRound1.js"></script>
-    <link rel="stylesheet" href="styles.css">
+    <title>Quiz Page</title>
+    <link rel="stylesheet" href="{% static 'style/styles.css' %}">
+    <style>
+        /* Additional styling for answer reveal */
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body class="body">
     <div class="container">
-        <h2> question <br><br></h2>
-                <button class="button">Reveal Answer</button>
+        <h2>{{ question.question_text }}</h2>
+        <button class="button" id="reveal_answer" disabled>Reveal Answer</button>
+        <p id="answer" class="hidden">{{ question.answer_text }}</p>
+        <p id="timer">Time left: <span id="countdown">20</span> seconds</p>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var revealButton = document.getElementById('reveal_answer');
+            var answer = document.getElementById('answer');
+            var countdownElement = document.getElementById('countdown');
+
+            var timeLeft = 20;  // Adjust timer duration as needed
+            var timer = setInterval(updateCountdown, 1000);
+
+            function updateCountdown() {
+                timeLeft--;
+                countdownElement.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    revealButton.disabled = false;
+                }
+            }
+
+            revealButton.addEventListener('click', function() {
+                answer.classList.remove('hidden');
+                revealButton.disabled = true; // Disable button after answer is revealed
+            });
+        });
+    </script>
 </body>
 </html>

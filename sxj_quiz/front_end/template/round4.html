@@ -1,0 +1,31 @@
+<!-- round4.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Round 4 - Buzzer Round</title>
+    <link rel="stylesheet" href="{% static 'style/styles.css' %}">
+</head>
+<body class="body">
+    <div class="container">
+        <h2>Round 4 - Buzzer Round</h2>
+        <ul>
+            {% for rule in rules4 %}
+                <li>{{ rule }}</li>
+            {% endfor %}
+        </ul>
+        <br>
+        <a href="{% url 'quiz' %}?round=4" class="button">Start Round 4</a>
+        <!-- Replace the URL with appropriate round parameter -->
+    </div>
+
+    <audio id="buzzer">
+        <source src="{% static 'audio/buzzer.mp3' %}" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script src="{% static 'js/quiz.js' %}"></script>
+</body>
+</html>
