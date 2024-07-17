@@ -10,16 +10,22 @@
 <body class="body">
     <div class="container">
         <br><br><br><br><br><br><br><br><br><br><br>
-        <h1><h1 style="color: blanchedalmond; font-family:Segoe UI;">Quiz Rounds</h1></h1><br><br>
-        <a href="{% url "rule" 1%}" class="button">Round 1<br>General Round</a><br>
-        <a href="{% url "rule" 2%}" class="button">Round 2<br>Mixed Bag</a><br>
-        <a href="{% url "rule" 3%}" class="button">Round 3<br>Rapid Fire Round</a><br>
-        <a href="{% url "rule" 4%}" class="button">Round 4<br>Buzzer Round</a><br>
-        <a href="{% url "rule" 5%}" class="button">Round 5<br>Audio Visual</a><br>
-        <a href="{% url "rule" 6%}" class="button">Round 6<br>Multiple Choice</a><br>
-        <a href="{% url "rule" 7%}" class="button">Round 7<br>Recall Your Memories</a><br>
-        <a href="{% url "rule" 8%}" class="button">Round 8<br>Mental Maths</a><br>
+        <h1 style="color: blanchedalmond; font-family:Segoe UI;">Quiz Rounds</h1><br><br>
+        <a href="#" onclick="startRound(1)" class="button">Round 1<br>General Round</a><br>
+        <a href="#" onclick="startRound(2)" class="button">Round 2<br>Mixed Bag</a><br>
+        <a href="#" onclick="startRound(3)" class="button">Round 3<br>Rapid Fire Round</a><br>
+        <a href="#" onclick="startRound(5)" class="button">Round 5<br>Audio Visual</a><br>
+        <a href="#" onclick="startRound(6)" class="button">Round 6<br>Multiple Choice</a><br>
+        <a href="#" onclick="startRound(7)" class="button">Round 7<br>Recall Your Memories</a><br>
+        <a href="#" onclick="startRound(8)" class="button">Round 8<br>Mental Maths</a><br>
         <a href="{% url "index"%}" class="button">Back</a>
     </div>
+
+    <script>
+        function startRound(roundNumber) {
+            // Redirect to the quiz page with the selected roundNumber
+            window.location.href = "{% url 'quiz' %}?round=" + roundNumber;
+        }
+    </script>
 </body>
 </html>

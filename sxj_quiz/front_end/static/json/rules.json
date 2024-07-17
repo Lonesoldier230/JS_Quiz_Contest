@@ -1,8 +1,8 @@
 {
     "rules1":[
         "1. Each team will be asked 5 questions. If the questions are not answered, they will get passed on to the next teams.",
-        "2. Correct answers will be awarded with 10 points. For the questions that are passed",
-        "3. The teams will be awarded with 5 points for each correct response.",
+        "2. each tem will be given 15 seconds to give their answer and correct answers will be awarded with 10 points.",
+        "3. For the questions that are passed the teams will be given 5 seconds to answer and correct answer will be awarded with 5 points for each correct response.",
         "4. The participants should be audible and clear when they respond to a question.",
         "5. Inaudibility, lack of clarity or confusion in answering the question will be taken as an incorrect response.",
         "6. A team’s first response will be taken as their final answer.",
@@ -20,30 +20,55 @@
         "6. A team’s first response will be taken as their final answer.",
         "7. If the pronunciation of the answer is not understood by the panel of judges, the team may be requested to spell out their response.",
         "8. The participants can respond to the questions only when the question is read completely. Interruption of any kind in between will lead to the cancellation of the question to the team."
-
     ],
     "rules3":[
-
         "1. Each team will nominate a member from their team.",
-"2. Nominated member will be given 35 seconds for 7 questions in this round.",
-"3. 5 points will be awarded for each correct answer.",
-"4. If the pronunciation of the answer is not understood by the panel of judges, the team may be requested to spell out their response.",
-"5. The participants can respond to the questions only when the question is read completely. Interruption of any kind in between will lead to the cancellation of the question to the team."
-
+        "2. Nominated member will be given 35 seconds for 7 questions in this round.",
+        "3. 5 points will be awarded for each correct answer.",
+        "4. If the pronunciation of the answer is not understood by the panel of judges, the team may be requested to spell out their response.",
+        "5. The participants can respond to the questions only when the question is read completely. Interruption of any kind in between will lead to the cancellation of the question to the team."
     ],
     "rules4": [
+        "1. There will be 6 questions in this round. Team pressing the buzzer first will be given the chance to answer.",
+        "2. 10 points will be awarded for each correct answer & 5 points will be deducted for each incorrect answer.",
+        "3. Team will be given 15 seconds for each question.",
+        "4. The questions do not get passed on to the other teams.",
+        "5. The participants can respond to the questions only when the question is read completely. Interruption of any kind in between will lead to the cancellation of the question to the team."
 
     ],
     "rules5": [
+            "1. Every team will be asked to identify a personality based on the audio or visual presented.",
+            "2. 10 points will be awarded for the correct answer.",
+            "3. Questions will not get passed on to the other teams.",
+            "4. The participants can respond to the questions only when the question is read completely.",
+            "Interruption of any kind in between will lead to the cancellation of the questions to the team."
+
+
+
 
     ],
     "rules6": [
 
+        "1. Every team will be asked two questions with multiple choices.",
+        "2. Once the quiz master finishes reading the questions, the respondents will have 15 seconds to answer the questions.",
+        "3. If answered correctly, they will be awarded 10 marks for the correct answer.",
+        "4. If answered incorrectly, 5 points will be deducted.",
+        "5. Questions unanswered will also be considered incorrect."
+
     ],
     "rules7": [
-
+            "1. Every team will be shown a series of 7 words each.",
+            "2. Each word will be shown for 10 seconds.",
+            "3. After the series of words is finished, the team should recall the words in the order that is shown.",
+            "4. If a team answers the words in correct order, the team is awarded with 10 points. No points will be awarded if there is a break in the series of the words.",
+            "5. The questions in this round will not get passed.",
+            "6. The words displayed should not be jotted down by any means."
     ],
     "rules8": [
-
+            "1. Every team will be asked two MATHS questions with multiple choices.",
+            "2. Once the quiz master finishes reading the questions, the respondents will have 5 seconds to answer the questions.",
+            "3. If answered correctly, they will be awarded 5 marks for the correct answer.",
+            "4. No points will be deducted for wrong answers.",
+            "5. Questions will not get passed onto other teams in this round."
     ]
 }
