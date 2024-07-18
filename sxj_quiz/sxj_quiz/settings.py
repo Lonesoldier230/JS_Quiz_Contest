@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+    'round.apps.RoundConfig' 
     #'buzzer.apps.BuzzerConfig'
 ]
 
@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'sxj_quiz.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-'''
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -97,7 +97,7 @@ DATABASES = {
         'NAME':'db.sqlite3'
     }
 }
-
+'''
 
 
 # Password validation
@@ -137,6 +137,9 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR ,'staticfiles')
 STATICFILES_DIRS = (os.path.join(BASE_DIR /'front_end/static/'),)
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
