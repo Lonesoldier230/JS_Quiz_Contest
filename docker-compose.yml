@@ -23,6 +23,7 @@ services:
     command: ./setup.sh
     volumes:
       - media:/Quiz_Web/media
+      - static:/Quiz_Web/staticfiles
 
   webserver:
     build: ./nginx/
@@ -32,9 +33,11 @@ services:
       - db
       - web
     volumes:
-      - ./sxj_quiz/staticfiles/:/home/static
+      - static:/Quiz_Web/staticfiles
+      - media:/Quiz_Web/media
 
 
 volumes:
   db_data:
   media:
+  static:
