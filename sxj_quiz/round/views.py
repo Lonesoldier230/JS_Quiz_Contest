@@ -9,13 +9,16 @@ class Main(View):
         return render(request, "rounds.html")
 
 def common(request, round, iter):
+    
     q_na = Que_ans.objects.filter(round__name = round)
     ctxt = {
         "question":q_na[iter - 1].question,
         "answer":q_na[iter - 1].answer,
         "iter":iter,
-        "limit": len(q_na)
+        "limit": len(q_na),
+        "round":request.session.get(f"{round}",0)
     }
+    request.session[f"{round}"] = iter
     return render(request, f'{round}.html', context=ctxt)
 
 def mix_bag(request, subject, iter):
