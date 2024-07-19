@@ -19,17 +19,18 @@
         <h2>{{ question}}</h2>
         <button class="button" id="reveal_answer" disabled>Reveal Answer</button>
         <p id="answer" class="hidden">{{answer}}</p>
-        <p id="timer">Time left: <span id="countdown">20</span> seconds</p>
-        <a href="{% url "round:main"%}" class="button">Back to Rounds</a>
+                <a href="{% url "round:main"%}" class="button">Back to Rounds</a>
     </div>
-
+    <div class="container">
+        <p id="timer">Time left: <span id="countdown">15</span> seconds</p>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var revealButton = document.getElementById('reveal_answer');
             var answer = document.getElementById('answer');
             var countdownElement = document.getElementById('countdown');
 
-            var timeLeft = 20;  // Adjust timer duration as needed
+            var timeLeft = 15;  // Adjust timer duration as needed
             var timer = setInterval(updateCountdown, 1000);
 
             function updateCountdown() {
