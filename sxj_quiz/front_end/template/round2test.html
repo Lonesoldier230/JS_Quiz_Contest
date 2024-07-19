@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Round 2 Quiz Page</title>
+    <link rel="stylesheet" href="{% static 'style/styles.css' %}">
+    <style>
+        /* Additional styling */
+        .hidden {
+            display: none;
+        }
+        .disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="body">
+    <div class="container">
+        <h2>Select a Number to Choose a Topic</h2>
+        <div id="number-selection">
+            {% for number in available_numbers %}
+                <button class="number-button" data-number="{{ number }}">{{ number }}</button>
+            {% endfor %}
+        </div>
+        <button id="mixed_bag">Mixed Bag</button>
+        <div id="question-container" class="hidden">
+            <h2 id="topic-title"></h2>
+            <div id="questions"></div>
+            <p id="timer">Time left: <span id="countdown">15</span> seconds</p>
+        </div>
+    </div>
+
+    <audio id="buzzer" src="{% static 'sounds/buzzer.mp3' %}" preload="auto"></audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var numberButtons = document.querySelectorAll('.number-button');
+            var mixedBagButton = document.getElementById('mixed_bag');
+            var questionContainer = document.getElementById('question-container');
+            var topicTitle = document.getElementById('topic-title');
+            var questionsDiv = document.getElementById('questions');
+            var countdownElement = document.getElementById('countdown');
+            var buzzer = document.getElementById('buzzer');
+            var timeLeft = 15;
+            var timer;
+
+            function updateCountdown() {
+                timeLeft--;
+                countdownElement.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    buzzer.play();
+                }
+            }
+
+            function loadQuestions(topic) {
+                fetch(`/get-questions/${topic}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        questionsDiv.innerHTML = '';
+                        data.questions.forEach((question, index) => {
+                            var questionElement = document.createElement('p');
+                            questionElement.textContent = `${index + 1}. ${question}`;
+                            questionsDiv.appendChild(questionElement);
+                        });
+                        topicTitle.textContent = data.topic;
+                        questionContainer.classList.remove('hidden');
+                        timer = setInterval(updateCountdown, 1000);
+                    });
+            }
+
+            numberButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    var number = this.getAttribute('data-number');
+                    loadQuestions(number);
+                    this.classList.add('disabled');
+                    this.disabled = true;
+                });
+            });
+
+            mixedBagButton.addEventListener('click', function() {
+                loadQuestions('mixed_bag');
+            });
+        });
+    </script>
+</body>
+</html>
