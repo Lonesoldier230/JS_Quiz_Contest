@@ -67,7 +67,7 @@ h2 {
     place-items: center;
     position: absolute;
     bottom: 0;
-    right: 1000; /* adjust the right value based on your needs */
+    right: 0; /* adjust the right value based on your needs */
     max-width: auto/* desired width */;
     max-height: auto/* desired height */;
 
