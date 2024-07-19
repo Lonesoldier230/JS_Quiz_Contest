@@ -21,7 +21,6 @@ def common(request, round, iter):
         "answer":q_na[iter - 1].answer,
         "iter":iter,
         "limit": len(q_na),
-        "next":iter+1,
         "round":request.session.get(f"{round}",0)
     }
     request.session[f"{round}"] = iter
