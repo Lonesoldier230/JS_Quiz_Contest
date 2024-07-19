@@ -6,7 +6,11 @@ from .models import Que_ans, MixedBag, Round, Au_Vis, Multiple
 # Create your views here.
 class Main(View):
     def get(self, request):
-        return render(request, "rounds.html")
+        val = request.session
+        ctxt = {}
+        for i in range(1,9):
+            ctxt[f"round{i}"]= val.get(f"round{i}",1)
+        return render(request, "rounds.html", context=ctxt)
 
 def common(request, round, iter):
     
@@ -57,4 +61,4 @@ def m_choice(request, pk):
     return render(request, 'round6.html')
 
 def mix_main(request):
-    return render(request, 'round6.html')
+    return render(request, 'round2.html')
