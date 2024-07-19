@@ -59,3 +59,13 @@ h2 {
 .button:hover {
     background-color: #4882cd;
 }
+
+
+
+.bottom-right-container {
+    position: absolute;
+    bottom: 0;
+    right: 0; /* adjust the right value based on your needs */
+    width: auto/* desired width */;
+    height: auto/* desired height */;
+  }
