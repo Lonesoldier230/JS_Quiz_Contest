@@ -65,7 +65,7 @@ h2 {
 .bottom-right-container {
     position: absolute;
     bottom: 0;
-    right: 0; /* adjust the right value based on your needs */
+    right: 1000; /* adjust the right value based on your needs */
     width: auto/* desired width */;
     height: auto/* desired height */;
   }
