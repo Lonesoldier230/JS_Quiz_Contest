@@ -10,6 +10,7 @@ class Main(View):
         ctxt = {}
         for i in range(1,9):
             ctxt[f"round{i}"]= val.get(f"round{i}",1)
+        ctxt["subject"] = val.get("subject", "None")
         return render(request, "rounds.html", context=ctxt)
 
 def common(request, round, iter):
@@ -20,6 +21,7 @@ def common(request, round, iter):
         "answer":q_na[iter - 1].answer,
         "iter":iter,
         "limit": len(q_na),
+        "next":iter+1,
         "round":request.session.get(f"{round}",0)
     }
     request.session[f"{round}"] = iter
@@ -27,6 +29,8 @@ def common(request, round, iter):
 
 def mix_bag(request, subject, iter):
     request.session[subject] = True
+    request.session["subject"] = subject
+    request.session["round2"] = iter
     mi = MixedBag.objects.get(subject = str(subject))
     di = mi.q_ans
     try:

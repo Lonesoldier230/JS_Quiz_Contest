@@ -25,3 +25,4 @@ urlpatterns = [
     path('round/',include("round.urls"), name= "round"),
     path('rules/<int:parse>/', rules, name = "rule")
 ]
+
