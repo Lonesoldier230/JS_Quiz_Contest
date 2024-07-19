@@ -63,9 +63,17 @@ h2 {
 
 
 .bottom-right-container {
+    display: grid;
+    place-items: center;
     position: absolute;
     bottom: 0;
     right: 1000; /* adjust the right value based on your needs */
-    width: auto/* desired width */;
-    height: auto/* desired height */;
+    max-width: auto/* desired width */;
+    max-height: auto/* desired height */;
+
+    padding: 20px;
+    background-color: #000000;
+    border-radius: 8px;
+    color: beige;
+    box-shadow: 30 30 10px rgba(22, 215, 8, 0.896);
   }
