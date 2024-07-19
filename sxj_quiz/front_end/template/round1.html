@@ -16,9 +16,9 @@
 </head>
 <body class="body">
     <div class="container">
-        <h2>{{ question}}</h2>
+        <p id="question" style="font-size: 45; color:antiquewhite">{{ question}}</h2>
         <button class="button" id="reveal_answer" disabled>Reveal Answer</button>
-        <p id="answer" class="hidden" style="font-size: 36; color:antiquewhite">{{answer}}</p>
+        <p id="answer" class="hidden" style="font-size: 45; color:antiquewhite">{{answer}}</p>
                 <a href="{% url "round:main"%}" class="button">Back to Rounds</a>
     </div>
     <div class="bottom-right-container">
