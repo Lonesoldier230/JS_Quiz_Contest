@@ -1,3 +1,6 @@
 /sxj-quiz
 .gitignore
-/.vscoe
+/.vscode
+db.sqlite3
+/media
+/staticfiles

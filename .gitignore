@@ -5,3 +5,5 @@ db.sqlite3
 *postgres_keys.env
 */.vscode
 /JS_Quiz
+*/media
+*/staticfiles
