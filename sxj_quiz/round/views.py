@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import View
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from .models import Que_ans, MixedBag, Round, Au_Vis, Multiple 
 
 # Create your views here.
@@ -15,7 +15,9 @@ class Main(View):
 
 def common(request, round, iter):
     
-    q_na = Que_ans.objects.filter(round__name = round)
+    q_na = Que_ans.objects.filter(round__name__iexact = round.replace("_"," "))
+    if len(q_na) < 1:
+        return HttpResponse("<h1>No Questions</h1>")
     ctxt = {
         "question":q_na[iter - 1].question,
         "answer":q_na[iter - 1].answer,
@@ -24,7 +26,7 @@ def common(request, round, iter):
         "round":request.session.get(f"{round}",0)
     }
     request.session[f"{round}"] = iter
-    return render(request, f'{round}.html', context=ctxt)
+    return render(request, f'Rounds/{round}.html', context=ctxt)
 
 def mix_bag(request, subject, iter):
     request.session[subject] = True
@@ -41,7 +43,7 @@ def mix_bag(request, subject, iter):
         }
     except IndexError:
         return Http404()
-    return render(request, 'round2.html', ctxt)
+    return render(request, 'Rounds/mixed_bag.html', ctxt)
 
 def visual_a(request, pk):
     db = Au_Vis.objects.get(pk = pk)
@@ -51,7 +53,7 @@ def visual_a(request, pk):
         "image_url":db.image.url,
         "limit":len(Au_Vis.objects.all())
     }
-    return render(request, 'round5.html',context=ctxt)
+    return render(request, 'audio_visual.html',context=ctxt)
 
 def m_choice(request, pk):
     zeek = Multiple.objects.get(pk = pk)
@@ -61,7 +63,7 @@ def m_choice(request, pk):
         "choices":zeek.choi,
         "limit":len(Multiple.objects.all())
     }
-    return render(request, 'round6.html')
+    return render(request, 'Rounds/multiple_choice.html')
 
 def mix_main(request):
-    return render(request, 'round2.html')
+    return render(request, 'Rounds/mixed_bag.html')

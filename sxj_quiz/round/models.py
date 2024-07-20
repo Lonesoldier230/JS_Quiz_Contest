@@ -47,3 +47,6 @@ class Multiple(models.Model):
 
 class Memory(models.Model):
     words = models.JSONField(default=list)
+    
+    def __str__(self):
+        return self.pk

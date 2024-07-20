@@ -12,7 +12,7 @@
         <br><br><br><br><br><br><br><br><br><br><br>
         <h1 style="color: blanchedalmond; font-family:Segoe UI;">Quiz Rounds</h1><br><br>
         <div class="btn-group" style="width:100%">
-        <a href="{% url "round:common" round='round1' iter=round1%}"><button  onclick="startRound(1)" style="width:70%"class="button-left">Round 1<br>General Round</button></a><a href="{% url "rule" 1%}"><button href="{% url "rule" 1 %}" style="width:30%"class="button-right">Rules</button></a><br>
+        <a href="{% url "round:common" round='general_round' iter=round1%}"><button  onclick="startRound(1)" style="width:70%"class="button-left">Round 1<br>General Round</button></a><a href="{% url "rule" 1%}"><button href="{% url "rule" 1 %}" style="width:30%"class="button-right">Rules</button></a><br>
         </div><br>
         <div class="btn-group" style="width:100%">
         {% if  subject == "None"%}
@@ -22,10 +22,10 @@
         {% endif %}
     </div><br>
         <div class="btn-group" style="width:100%">
-        <a href="{% url "round:common" round='round3' iter=round3%}"><button style="width:70%" onclick="startRound(3)" class="button-left">Round 3<br>Rapid Fire Round</button></a> <a href="{% url "rule" 3%}"><button style="width:30%" class="button-right">Rules</button></a>
+        <a href="{% url "round:common" round='rapid_fire' iter=round3%}"><button style="width:70%" onclick="startRound(3)" class="button-left">Round 3<br>Rapid Fire Round</button></a> <a href="{% url "rule" 3%}"><button style="width:30%" class="button-right">Rules</button></a>
     </div><br>
         <div class="btn-group" style="width:100%">
-        <a href="{% url "round:common" round='round4' iter=round4%}"><button  style="width:70%" onclick="startRound(4)" class="button-left">Round 4<br>Rapid Fire Round</button></a> <a href="{% url "rule" 4%}"><button style="width:30%" class="button-right">Rules</button></a>
+        <a href="{% url "round:common" round='buzzer' iter=round4%}"><button  style="width:70%" onclick="startRound(4)" class="button-left">Round 4<br>Rapid Fire Round</button></a> <a href="{% url "rule" 4%}"><button style="width:30%" class="button-right">Rules</button></a>
     </div><br>
         <div class="btn-group" style="width:100%">
         <a href={% url "round:auvis" pk=round5 %}><button style="width:70%" onclick="startRound(5)" class="button-left">Round 5<br>Audio Visual</button></a> <a href="{% url "rule" 5 %}"><button href="{% url "rule" 5 %}" style="width:30%" class="button-right">Rules</button></a>
