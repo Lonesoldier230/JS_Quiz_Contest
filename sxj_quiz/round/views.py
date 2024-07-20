@@ -57,13 +57,14 @@ def visual_a(request, pk):
 
 def m_choice(request, pk):
     zeek = Multiple.objects.get(pk = pk)
+    print(zeek.ques)
     ctxt = {
         "question":zeek.ques,
         "answer":zeek.answer,
         "choices":zeek.choi,
         "limit":len(Multiple.objects.all())
     }
-    return render(request, 'Rounds/multiple_choice.html')
+    return render(request, 'Rounds/multiple_choice.html',context=ctxt)
 
 def mix_main(request):
     return render(request, 'Rounds/mixed_bag.html')

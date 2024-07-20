@@ -1,9 +1,7 @@
 <!DOCTYPE html>
-{% load static %}
 <html lang="en">
   <head>
-    <title>Classic Next Pheasant</title>
-    <meta property="og:title" content="Classic Next Pheasant" />
+    <title>404 - Not Found</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="utf-8" />
     <meta property="twitter:card" content="summary_large_image" />
@@ -60,20 +58,20 @@
     />
   </head>
   <body>
-    <link rel="stylesheet" href="{% static "style/style_mchoice.css" %}" />
+    <link rel="stylesheet" href="./style.css" />
     <div>
-      <link href="{% static "style/index.css" %}" rel="stylesheet" />
+      <link href="./404.css" rel="stylesheet" />
 
-      <div class="home-container">
-        <button type="button" class="home-button button">{{choices.0}}</button>
-        <button type="button" class="home-button1 button">{{choices.1}}</button>
-        <button type="button" class="home-button2 button">{{choices.2}}</button>
-        <h2 class="home-text">{{question}}</h2>
-        <button type="button" class="home-button3 button">{{choices.3}}</button>
-        <h1 class="home-text1">
-          <span>Multiple Choice</span>
-          <br />
-        </h1>
+      <div class="not-found-container">
+        <h3>OOPS! PAGE NOT FOUND</h3>
+        <div class="not-found-container1">
+          <h1 class="not-found-text1">404</h1>
+        </div>
+        <div class="not-found-container2">
+          <h2 class="not-found-text2">
+            WE ARE SORRY, BUT THE PAGE YOU REQUESTED WAS NOT FOUND
+          </h2>
+        </div>
       </div>
     </div>
   </body>

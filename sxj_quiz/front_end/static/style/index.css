@@ -1,0 +1,124 @@
+.home-container {
+  width: 100%;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  background-color: #0d0d10;
+}
+.home-button {
+  flex: 1;
+  left: 20.5px;
+  color: #0c9688;
+  right: miz;
+  width: 439px;
+  bottom: 20.5px;
+  height: 396px;
+  padding: 20.5px;
+  z-index: 50;
+  position: absolute;
+  font-size: 50px;
+  text-align: justify;
+  transition: 0.3s;
+  font-family: "Comic Sans MS";
+  border-color: #0db37e;
+  border-width: 5px;
+  border-radius: var(--dl-radius-radius-inputradius);
+  text-transform: capitalize;
+  background-color: transparent;
+}
+
+.home-button1 {
+  flex: 1;
+  color: #0c9688;
+  right: 20.5px;
+  width: 439px;
+  bottom: 20.5px;
+  height: 396px;
+  padding: 20.5px;
+  z-index: 50;
+  position: absolute;
+  font-size: 50px;
+  text-align: justify;
+  transition: 0.3s;
+  font-family: "Comic Sans MS";
+  border-color: #0db37e;
+  border-width: 5px;
+  border-radius: var(--dl-radius-radius-inputradius);
+  text-transform: capitalize;
+  background-color: transparent;
+}
+
+.home-button2 {
+  left: 500px;
+  color: #0c9688;
+  right: miz;
+  width: 439px;
+  bottom: 20.5px;
+  height: 396px;
+  padding: 20.5px;
+  z-index: 50;
+  position: absolute;
+  font-size: 50px;
+  text-align: justify;
+  transition: 0.3s;
+  font-family: "Comic Sans MS";
+  border-color: #0db37e;
+  border-width: 5px;
+  border-radius: var(--dl-radius-radius-inputradius);
+  text-transform: capitalize;
+  background-color: transparent;
+}
+
+.home-text {
+  top: 281px;
+  left: 0px;
+  color: #05cece;
+  right: 0px;
+  width: 1466px;
+  height: 189px;
+  margin: auto;
+  position: absolute;
+  font-size: 80px;
+  text-align: center;
+  font-family: "Merriweather";
+  text-transform: capitalize;
+}
+.home-button3 {
+  flex: 1;
+  color: #0c9688;
+  right: 500.5px;
+  width: 439px;
+  bottom: 20.5px;
+  height: 396px;
+  padding: 20.5px;
+  z-index: 50;
+  position: absolute;
+  font-size: 50px;
+  text-align: justify;
+  transition: 0.3s;
+  font-family: "Comic Sans MS";
+  border-color: #0db37e;
+  border-width: 5px;
+  border-radius: var(--dl-radius-radius-inputradius);
+  text-transform: capitalize;
+  background-color: transparent;
+}
+
+.home-text1 {
+  top: 82px;
+  left: 0px;
+  color: rgb(189, 137, 14);
+  right: 0px;
+  width: var(--dl-size-size-maxwidth);
+  margin: auto;
+  position: absolute;
+  font-size: 90px;
+  text-align: center;
+  font-family: "Inter";
+  font-weight: 400;
+  line-height: 1.15;
+  text-transform: none;
+  text-decoration: none;
+}
