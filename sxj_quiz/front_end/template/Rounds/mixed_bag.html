@@ -1,162 +1,39 @@
-<!-- fetch_question.html -->
- {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Round 2 - Mixed Bag</title>
-    <link rel="stylesheet" href="{% static 'style/styles.css'%}">
+    <title>Quiz Contest</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+            text-align: center;
+        }
+        a {
+            text-decoration: none;
+            color: #007BFF;
+            font-size: 18px;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
-<body class="body"  style="background-image:url('{% static "images/quiz.png" %}')">
-    <div class="container">
-        <h2>Round 2 - Mixed Bag</h2>
-        <div id="question-container">
-            <!-- Questions will be appended here -->
-        </div>
-        <button class="button" id="start_round">Start Round 2</button>
-        <button class="button" id="next_question" style="display: none;">Next Question</button>
-        <button class="button" id="reveal_answer" style="display: none;">Reveal Answer</button>
-        <p id="answer" class="hidden"></p>
-        <p id="timer" style="display: none;">Time left: <span id="countdown">10</span> seconds</p>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var startButton = document.getElementById('start_round');
-            var nextButton = document.getElementById('next_question');
-            var revealButton = document.getElementById('reveal_answer');
-            var answer = document.getElementById('answer');
-            var countdownElement = document.getElementById('countdown');
-            var questionContainer = document.getElementById('question-container');
-
-            var questions = [];  // Array to store questions
-            var currentQuestionIndex = 0;
-
-            // Example questions for each option
-            var option1Questions = [
-                { question_text: "Question 1 for Option 1", answer_text: "Answer 1 for Option 1" },
-                { question_text: "Question 2 for Option 1", answer_text: "Answer 2 for Option 1" },
-                { question_text: "Question 3 for Option 1", answer_text: "Answer 3 for Option 1" },
-                { question_text: "Question 4 for Option 1", answer_text: "Answer 4 for Option 1" },
-                { question_text: "Question 5 for Option 1", answer_text: "Answer 5 for Option 1" }
-            ];
-
-            var option2Questions = [
-                { question_text: "Question 1 for Option 2", answer_text: "Answer 1 for Option 2" },
-                { question_text: "Question 2 for Option 2", answer_text: "Answer 2 for Option 2" },
-                { question_text: "Question 3 for Option 2", answer_text: "Answer 3 for Option 2" },
-                { question_text: "Question 4 for Option 2", answer_text: "Answer 4 for Option 2" },
-                { question_text: "Question 5 for Option 2", answer_text: "Answer 5 for Option 2" }
-            ];
-
-            var option3Questions = [
-                { question_text: "Question 1 for Option 3", answer_text: "Answer 1 for Option 3" },
-                { question_text: "Question 2 for Option 3", answer_text: "Answer 2 for Option 3" },
-                { question_text: "Question 3 for Option 3", answer_text: "Answer 3 for Option 3" },
-                { question_text: "Question 4 for Option 3", answer_text: "Answer 4 for Option 3" },
-                { question_text: "Question 5 for Option 3", answer_text: "Answer 5 for Option 3" }
-            ];
-
-            var option4Questions = [
-                { question_text: "Question 1 for Option 4", answer_text: "Answer 1 for Option 4" },
-                { question_text: "Question 2 for Option 4", answer_text: "Answer 2 for Option 4" },
-                { question_text: "Question 3 for Option 4", answer_text: "Answer 3 for Option 4" },
-                { question_text: "Question 4 for Option 4", answer_text: "Answer 4 for Option 4" },
-                { question_text: "Question 5 for Option 4", answer_text: "Answer 5 for Option 4" }
-            ];
-
-            var option5Questions = [
-                { question_text: "Question 1 for Option 5", answer_text: "Answer 1 for Option 5" },
-                { question_text: "Question 2 for Option 5", answer_text: "Answer 2 for Option 5" },
-                { question_text: "Question 3 for Option 5", answer_text: "Answer 3 for Option 5" },
-                { question_text: "Question 4 for Option 5", answer_text: "Answer 4 for Option 5" },
-                { question_text: "Question 5 for Option 5", answer_text: "Answer 5 for Option 5" }
-            ];
-
-            var option6Questions = [
-                { question_text: "Question 1 for Option 6", answer_text: "Answer 1 for Option 6" },
-                { question_text: "Question 2 for Option 6", answer_text: "Answer 2 for Option 6" },
-                { question_text: "Question 3 for Option 6", answer_text: "Answer 3 for Option 6" },
-                { question_text: "Question 4 for Option 6", answer_text: "Answer 4 for Option 6" },
-                { question_text: "Question 5 for Option 6", answer_text: "Answer 5 for Option 6" }
-            ];
-
-            // Event listener for Start Round button
-            startButton.addEventListener('click', function() {
-                var option = document.querySelector('select[name="option"]').value;
-                switch (option) {
-                    case '1':
-                        questions = option1Questions;
-                        break;
-                    case '2':
-                        questions = option2Questions;
-                        break;
-                    case '3':
-                        questions = option3Questions;
-                        break;
-                    case '4':
-                        questions = option4Questions;
-                        break;
-                    case '5':
-                        questions = option5Questions;
-                        break;
-                    case '6':
-                        questions = option6Questions;
-                        break;
-                    default:
-                        break;
-                }
-                startButton.style.display = 'none';
-                nextButton.style.display = 'block';
-                showNextQuestion();
-            });
-
-            // Event listener for Next Question button
-            nextButton.addEventListener('click', function() {
-                currentQuestionIndex++;
-                if (currentQuestionIndex < questions.length) {
-                    showNextQuestion();
-                } else {
-                    nextButton.style.display = 'none';
-                    revealButton.style.display = 'block';
-                    countdownElement.style.display = 'block';
-                    startTimer();
-                }
-            });
-
-            // Event listener for Reveal Answer button
-            revealButton.addEventListener('click', function() {
-                answer.classList.remove('hidden');
-                revealButton.disabled = true; // Disable button after answer is revealed
-            });
-
-            // Function to display the next question
-            function showNextQuestion() {
-                var question = questions[currentQuestionIndex];
-                var questionElement = document.createElement('div');
-                questionElement.innerHTML = `
-                    <h3>Question ${currentQuestionIndex + 1}:</h3>
-                    <p>${question.question_text}</p>
-                `;
-                questionContainer.appendChild(questionElement);
-            }
-
-            // Function to start the countdown timer
-            function startTimer() {
-                var timeLeft = 10;  // Adjust timer duration as needed
-                var timer = setInterval(updateCountdown, 1000);
-
-                function updateCountdown() {
-                    timeLeft--;
-                    countdownElement.textContent = timeLeft;
-                    if (timeLeft <= 0) {
-                        clearInterval(timer);
-                        revealButton.disabled = false;
-                    }
-                }
-            }
-        });
-    </script>
+<body>
+    <h1>Welcome to the Quiz Contest</h1>
+    <h2>Select a Round</h2>
+    <ul>
+        {% for round in rounds %}
+            <li><a href="{% url 'round_questions' round.id %}">{{ round.name }}</a></li>
+        {% endfor %}
+    </ul>
 </body>
 </html>

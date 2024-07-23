@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ round.name }} Questions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+        }
+        #timer {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: red;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .question p {
+            font-size: 18px;
+        }
+        .options label {
+            display: block;
+            margin: 5px 0;
+        }
+    </style>
+    <script>
+        let timer;
+        let timeLeft = 15;
+
+        function startTimer() {
+            timer = setInterval(function() {
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    alert("Time's up!");
+                    // Optionally submit the form here
+                } else {
+                    document.getElementById("timer").innerHTML = timeLeft + " seconds remaining";
+                }
+                timeLeft -= 1;
+            }, 1000);
+        }
+
+        window.onload = startTimer;
+    </script>
+</head>
+<body>
+    <h1>{{ round.name }}</h1>
+    <form method="post" action="{% url 'submit_answers' %}">
+        {% csrf_token %}
+        {% for question in questions %}
+            <div class="question">
+                <p>{{ question.question_text }}</p>
+                <div class="options">
+                    <label><input type="radio" name="question{{ question.id }}" value="{{ question.option1 }}"> {{ question.option1 }}</label>
+                    <label><input type="radio" name="question{{ question.id }}" value="{{ question.option2 }}"> {{ question.option2 }}</label>
+                    <label><input type="radio" name="question{{ question.id }}" value="{{ question.option3 }}"> {{ question.option3 }}</label>
+                    <label><input type="radio" name="question{{ question.id }}" value="{{ question.option4 }}"> {{ question.option4 }}</label>
+                </div>
+            </div>
+        {% endfor %}
+        <div style="text-align: center;">
+            <input type="submit" value="Submit">
+        </div>
+    </form>
+    <div id="timer">15 seconds remaining</div>
+</body>
+</html>
