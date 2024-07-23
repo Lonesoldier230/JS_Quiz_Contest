@@ -1,89 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Round 2 Quiz Page</title>
-    <link rel="stylesheet" href="{% static 'style/styles.css' %}">
+    <title>Quiz Round Questions</title>
     <style>
-        /* Additional styling */
-        .hidden {
-            display: none;
+        body {
+            font-family: Arial, sans-serif;
         }
-        .disabled {
-            opacity: 0.5;
-            pointer-events: none;
+        h1 {
+            text-align: center;
+        }
+        #timer {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: red;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .question p {
+            font-size: 18px;
+        }
+        .options label {
+            display: block;
+            margin: 5px 0;
         }
     </style>
-</head>
-<body class="body">
-    <div class="container">
-        <h2>Select a Number to Choose a Topic</h2>
-        <div id="number-selection">
-            {% for number in available_numbers %}
-                <button class="number-button" data-number="{{ number }}">{{ number }}</button>
-            {% endfor %}
-        </div>
-        <button id="mixed_bag">Mixed Bag</button>
-        <div id="question-container" class="hidden">
-            <h2 id="topic-title"></h2>
-            <div id="questions"></div>
-            <p id="timer">Time left: <span id="countdown">15</span> seconds</p>
-        </div>
-    </div>
-
-    <audio id="buzzer" src="{% static 'sounds/buzzer.mp3' %}" preload="auto"></audio>
-
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var numberButtons = document.querySelectorAll('.number-button');
-            var mixedBagButton = document.getElementById('mixed_bag');
-            var questionContainer = document.getElementById('question-container');
-            var topicTitle = document.getElementById('topic-title');
-            var questionsDiv = document.getElementById('questions');
-            var countdownElement = document.getElementById('countdown');
-            var buzzer = document.getElementById('buzzer');
-            var timeLeft = 15;
-            var timer;
+        let timer;
+        let timeLeft = 15;
 
-            function updateCountdown() {
-                timeLeft--;
-                countdownElement.textContent = timeLeft;
+        function startTimer() {
+            timer = setInterval(function() {
                 if (timeLeft <= 0) {
                     clearInterval(timer);
-                    buzzer.play();
+                    alert("Time's up!");
+                    // Optionally submit the form here
+                } else {
+                    document.getElementById("timer").innerHTML = timeLeft + " seconds remaining";
                 }
-            }
+                timeLeft -= 1;
+            }, 1000);
+        }
 
-            function loadQuestions(topic) {
-                fetch(`/get-questions/${topic}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        questionsDiv.innerHTML = '';
-                        data.questions.forEach((question, index) => {
-                            var questionElement = document.createElement('p');
-                            questionElement.textContent = `${index + 1}. ${question}`;
-                            questionsDiv.appendChild(questionElement);
-                        });
-                        topicTitle.textContent = data.topic;
-                        questionContainer.classList.remove('hidden');
-                        timer = setInterval(updateCountdown, 1000);
-                    });
-            }
-
-            numberButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    var number = this.getAttribute('data-number');
-                    loadQuestions(number);
-                    this.classList.add('disabled');
-                    this.disabled = true;
-                });
-            });
-
-            mixedBagButton.addEventListener('click', function() {
-                loadQuestions('mixed_bag');
-            });
-        });
+        window.onload = startTimer;
     </script>
+</head>
+<body>
+    <h1>Quiz Round</h1>
+    <form method="post" action="/submit_answers">
+        <div class="question">
+            <p>Question 1: What is the capital of France?</p>
+            <div class="options">
+                <label><input type="radio" name="question1" value="Paris"> Paris</label>
+                <label><input type="radio" name="question1" value="London"> London</label>
+                <label><input type="radio" name="question1" value="Berlin"> Berlin</label>
+                <label><input type="radio" name="question1" value="Madrid"> Madrid</label>
+            </div>
+        </div>
+        <div class="question">
+            <p>Question 2: What is 2 + 2?</p>
+            <div class="options">
+                <label><input type="radio" name="question2" value="3"> 3</label>
+                <label><input type="radio" name="question2" value="4"> 4</label>
+                <label><input type="radio" name="question2" value="5"> 5</label>
+                <label><input type="radio" name="question2" value="6"> 6</label>
+            </div>
+        </div>
+        <div class="question">
+            <p>Question 3: Who wrote 'Hamlet'?</p>
+            <div class="options">
+                <label><input type="radio" name="question3" value="Shakespeare"> Shakespeare</label>
+                <label><input type="radio" name="question3" value="Dickens"> Dickens</label>
+                <label><input type="radio" name="question3" value="Hemingway"> Hemingway</label>
+                <label><input type="radio" name="question3" value="Tolkien"> Tolkien</label>
+            </div>
+        </div>
+        <div class="question">
+            <p>Question 4: What is the chemical symbol for water?</p>
+            <div class="options">
+                <label><input type="radio" name="question4" value="O2"> O2</label>
+                <label><input type="radio" name="question4" value="H2O"> H2O</label>
+                <label><input type="radio" name="question4" value="CO2"> CO2</label>
+                <label><input type="radio" name="question4" value="NaCl"> NaCl</label>
+            </div>
+        </div>
+        <div class="question">
+            <p>Question 5: What is the speed of light?</p>
+            <div class="options">
+                <label><input type="radio" name="question5" value="299792458 m/s"> 299792458 m/s</label>
+                <label><input type="radio" name="question5" value="300000000 m/s"> 300000000 m/s</label>
+                <label><input type="radio" name="question5" value="150000000 m/s"> 150000000 m/s</label>
+                <label><input type="radio" name="question5" value="299792 km/s"> 299792 km/s</label>
+            </div>
+        </div>
+        <div style="text-align: center;">
+            <input type="submit" value="Submit">
+        </div>
+    </form>
+    <div id="timer">15 seconds remaining</div>
 </body>
 </html>
