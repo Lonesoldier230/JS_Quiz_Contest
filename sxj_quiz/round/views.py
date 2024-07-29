@@ -12,11 +12,13 @@ class Main(View):
         ctxt["subject"] = val.get("subject", "None")
         return render(request, "rounds.html", context=ctxt)
 
+
 # round/<str:round>/<int:iter>
 def common(request, round, iter):
     q_na = Que_ans.objects.filter(round__name__iexact = round.replace("_"," "))
     if len(q_na) < 1:
         return render(request, '404.html')
+    
     ctxt = {
         "question":q_na[iter - 1].question,
         "answer":q_na[iter - 1].answer,
@@ -27,6 +29,7 @@ def common(request, round, iter):
     request.session[f"{round}"] = int(iter)
     return render(request, f'Rounds/{round}.html', context=ctxt)
 
+
 # MixedBag/<str:subject>/<int:iter>
 def mix_bag(request, subject, iter):
     request.session[subject] = True
@@ -34,6 +37,7 @@ def mix_bag(request, subject, iter):
     request.session["round2"] = int(iter)
     mi = MixedBag.objects.get(subject = str(subject))
     di = mi.q_ans
+    
     try:
         ctxt = {
             "question":list(di.keys())[iter - 1],
@@ -45,12 +49,14 @@ def mix_bag(request, subject, iter):
         return render(request, '404.html')
     return render(request, 'Rounds/mixed_bag.html', ctxt)
 
+
 # AudioVisual/<int:pk>
 def visual_a(request, pk):
     try:
         db = Au_Vis.objects.get(pk = pk)
     except:
         return render(request, '404.html')
+    
     ctxt = {
         "question":db.ques,
         "answer":db.answr,
@@ -60,12 +66,14 @@ def visual_a(request, pk):
     request.session["audio_visual"] = int(pk)
     return render(request, 'Rounds/audio_visual.html',context=ctxt)
 
+
 # Multiple/<int:pk>
 def m_choice(request, pk):
     try:
         zeek = Multiple.objects.get(pk = pk)
     except:
         return render(request, '404.html')
+    
     ctxt = {
         "question":zeek.ques,
         "answer":zeek.answer,
@@ -75,19 +83,23 @@ def m_choice(request, pk):
     request.session["multiple_choice"] = int(pk)
     return render(request, 'Rounds/multiple_choice.html',context=ctxt)
 
+
 # MixedBag/
 def mix_main(request):
     db = MixedBag.objects.all()
+    
     ctxt = {
         "subjects":[i.subject for i in db]
     }
     return render(request, 'Rounds/mixed_bag.html', context=ctxt)
 
+# Recall/<int:pk>
 def recall(request, pk):
     try:
         db = Memory.objects.get(pk = 1)
     except:
         return render(request, '404.html')
+    
     ctxt = {
         "words":db
     }
