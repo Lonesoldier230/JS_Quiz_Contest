@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Page</title>
+    <link rel="stylesheet" href="{% static 'style/styles.css' %}">
+    <style>
+        .hidden {
+            display: none;
+        }
+        .visible {
+            display: block;
+        }
+    </style>
+</head>
+<body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
+    <div class="container">
+        <div id="word-container" style="font-size: 45px; color:antiquewhite;"></div>
+        <button class="hidden" id="reveal_button">Reveal All Words</button>
+        <div id="answers-container" class="hidden" style="font-size: 30px; color:antiquewhite;"></div>
+        <a href="{% url "round:main" %}" class="button hidden" id="back_button">Back to Rounds</a>
+    </div>
+    <div class="bottom-right-container">
+        <p id="timer">Time left: <span id="countdown">10</span> seconds</p>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var words = {{ words|safe }};
+            var answers = {{ answers|safe }};
+            var wordContainer = document.getElementById('word-container');
+            var countdownElement = document.getElementById('countdown');
+            var revealButton = document.getElementById('reveal_button');
+            var answersContainer = document.getElementById('answers-container');
+            var backButton = document.getElementById('back_button');
+            var bottomRightContainer = document.querySelector('.bottom-right-container');
+
+            var currentWordIndex = 0;
+            var timeLeft = 10;
+            var timer = setInterval(updateCountdown, 1000);
+
+            function showNextWord() {
+                if (currentWordIndex < words.length) {
+                    wordContainer.textContent = words[currentWordIndex];
+                    currentWordIndex++;
+                    timeLeft = 10;
+                } else {
+                    clearInterval(timer);
+                    revealButton.classList.remove('hidden');
+                    wordContainer.classList.add('hidden');
+                    bottomRightContainer.classList.add('hidden');
+                }
+            }
+
+            function updateCountdown() {
+                timeLeft--;
+                countdownElement.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    showNextWord();
+                }
+            }
+
+            revealButton.addEventListener('click', function() {
+                var html = '';
+                for (var i = 0; i < words.length; i++) {
+                    html += '<p>' + words[i] + ': ' + answers[i] + '</p>';
+                }
+                answersContainer.innerHTML = html;
+                answersContainer.classList.remove('hidden');
+                revealButton.classList.add('hidden');
+                backButton.classList.remove('hidden');
+            });
+
+            showNextWord();  // Show the first word immediately
+        });
+    </script>
+</body>
+</html>
