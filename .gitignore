@@ -4,6 +4,6 @@ sxj-quiz/
 *.env
 *postgres_keys.env
 .vscode/
-JS_Quiz/
-media/
-staticfiles/
+JS_Quiz
+media
+staticfiles
