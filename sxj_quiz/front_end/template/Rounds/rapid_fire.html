@@ -1,31 +1,48 @@
-<!-- round3.html -->
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+    <title>Quiz</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Round 3 - Rapid Fire Round</title>
+    <title>Buzzer Round</title>
     <link rel="stylesheet" href="{% static 'style/styles.css' %}">
+    <script>
+        function startTimer(duration, display) {
+            var timer = duration, minutes, seconds;
+            setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    document.getElementById("quiz_form").submit();
+                }
+            }, 1000);
+        }
+
+        window.onload = function () {
+            var thirtyFiveSeconds = 35,
+                display = document.querySelector('#time');
+            startTimer(thirtyFiveSeconds, display);
+        };
+    </script>
 </head>
-<body class="body"  style="background-image:url('{% static "images/quiz.png" %}')">
-    <div class="container">
-        <h2>Round 3 - Rapid Fire Round</h2>
-        <ul>
-            {% for rule in rules3 %}
-                <li>{{ rule }}</li>
-            {% endfor %}
-        </ul>
-        <br>
-        <a href="{% url 'quiz' %}?round=3" class="button">Start Round 3</a>
-        <!-- Replace the URL with appropriate round parameter -->
-    </div>
-
-    <audio id="buzzer">
-        <source src="{% static 'audio/buzzer.mp3' %}" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-
-    <script src="{% static 'js/quiz.js' %}"></script>
+<body>
+    <h1>Quiz</h1>
+    <form id="quiz_form" method="POST">
+        {% csrf_token %}
+        {% for question in questions %}
+            <div>
+                <p>{{ question.question_text }}</p>
+                <input type="text" name="question_{{ forloop.counter0 }}">
+            </div>
+        {% endfor %}
+        <button type="submit">Submit</button>
+    </form>
+    <div>Time left: <span id="time">00:35</span></div>
 </body>
 </html>
