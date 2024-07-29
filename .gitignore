@@ -1,9 +1,9 @@
 *__pycache__
 db.sqlite3
-/sxj-quiz
+sxj-quiz/
 *.env
 *postgres_keys.env
-*/.vscode
-/JS_Quiz
-*/media
-*/staticfiles
+.vscode/
+JS_Quiz/
+media/
+staticfiles/
