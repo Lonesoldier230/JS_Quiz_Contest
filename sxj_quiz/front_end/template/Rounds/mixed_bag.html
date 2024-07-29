@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="{% static 'style/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'style/style.css' %}">
     <title>Quiz Contest</title>
     <style>
         body {
@@ -35,8 +36,8 @@
     <h1>Welcome to the Quiz Contest</h1>
     <h2>Select a Round</h2>
     <ul>
-        {% for round in rounds %}
-            <li><a href="{% url 'round_questions' round.id %}">{{ round.name }}</a></li>
+        {% for round in subjects %}
+            <li><a href="{% url 'round:mix' subject=round iter=1%}">{{ round }}</a></li>
         {% endfor %}
     </ul>
 </body>
