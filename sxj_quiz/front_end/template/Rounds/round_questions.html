@@ -1,33 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Page</title>
+    <link rel="stylesheet" href="{% static 'style/styles.css' %}">
     <title>{{ round.name }} Question</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        h1 {
-            text-align: center;
-        }
-        #timer {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            font-size: 24px;
-            color: red;
-        }
-        .question {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .question p {
-            font-size: 18px;
-        }
-        .options label {
-            display: block;
-            margin: 5px 0;
-        }
-    </style>
     <script>
         let timer;
         let timeLeft = 15;
