@@ -58,7 +58,7 @@ def visual_a(request, pk):
         "limit":len(Au_Vis.objects.all())
     }
     request.session["audio_visual"] = int(pk)
-    return render(request, 'audio_visual.html',context=ctxt)
+    return render(request, 'Rounds/audio_visual.html',context=ctxt)
 
 # Multiple/<int:pk>
 def m_choice(request, pk):

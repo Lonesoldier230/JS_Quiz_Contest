@@ -5,5 +5,6 @@ sxj-quiz/
 *postgres_keys.env
 .vscode/
 JS_Quiz
-media
-staticfiles
+*media/
+*staticfiles/
+*migrations/
