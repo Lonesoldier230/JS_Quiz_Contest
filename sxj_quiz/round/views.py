@@ -2,14 +2,19 @@ from django.shortcuts import render
 from django.views import View
 from .models import Que_ans, MixedBag, Au_Vis, Multiple, Memory
 
+
 # Create your views here.
 class Main(View):
     def get(self, request):
+        
         val = request.session
         ctxt = {}
+        li = ["general_round","mixed_bag","rapid_fire","buzzer","audio_visual","multiple_choice","recall","mental_maths"]
+        
         for i in range(1,9):
-            ctxt[f"round{i}"]= val.get(f"round{i}",1)
+            ctxt[f"round{i}"]= val.get(f"{li[i-1]}",1)
         ctxt["subject"] = val.get("subject", "None")
+        
         return render(request, "rounds.html", context=ctxt)
 
 
@@ -24,29 +29,28 @@ def common(request, round, iter):
         "answer":q_na[iter - 1].answer,
         "iter":iter,
         "limit": len(q_na),
-        "round":request.session.get(f"{round}",0)
+        "round":request.session.get(f"{round.lower()}",0)
     }
-    request.session[f"{round}"] = int(iter)
-    return render(request, f'Rounds/{round}.html', context=ctxt)
-
+    
+    request.session[f"{round.lower()}"] = int(iter)
+    return render(request, f'Rounds/{round.lower()}.html', context=ctxt)
+    #return render(request, f'Rounds/general_round.html', context=ctxt)
 
 # MixedBag/<str:subject>/<int:iter>
 def mix_bag(request, subject, iter):
     request.session[subject] = True
     request.session["subject"] = str(subject)
-    request.session["round2"] = int(iter)
+    request.session["mixed_bag"] = int(iter)
     mi = MixedBag.objects.get(subject = str(subject))
     di = mi.q_ans
     
-    try:
-        ctxt = {
+    ctxt = {
             "question":list(di.keys())[iter - 1],
             "answer":list(di.values())[iter - 1],
             "iter":iter,
             "limit": len(di)
         }
-    except IndexError:
-        return render(request, '404.html')
+    
     return render(request, 'Rounds/mixed_bag.html', ctxt)
 
 
@@ -63,6 +67,7 @@ def visual_a(request, pk):
         "image_url":db.image.url,
         "limit":len(Au_Vis.objects.all())
     }
+    
     request.session["audio_visual"] = int(pk)
     return render(request, 'Rounds/audio_visual.html',context=ctxt)
 
@@ -80,6 +85,7 @@ def m_choice(request, pk):
         "choices":zeek.choi,
         "limit":len(Multiple.objects.all())
     }
+    
     request.session["multiple_choice"] = int(pk)
     return render(request, 'Rounds/multiple_choice.html',context=ctxt)
 
@@ -91,7 +97,8 @@ def mix_main(request):
     ctxt = {
         "subjects":[i.subject for i in db]
     }
-    return render(request, 'Rounds/mixed_bag.html', context=ctxt)
+    
+    return render(request, 'Rounds/mixed_bag_main.html', context=ctxt)
 
 # Recall/<int:pk>
 def recall(request, pk):
@@ -103,5 +110,6 @@ def recall(request, pk):
     ctxt = {
         "words":db
     }
+    
     request.session["recall"] = int(pk)
     return render(request,"Rounds/recall.html",context=ctxt)
