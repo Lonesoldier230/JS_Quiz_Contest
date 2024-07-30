@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'style/styles.css' %}">
-    <title>{{ round.name }} Question</title>
+    <title>{{ subject}} Question</title>
     <script>
         let timer;
         let timeLeft = 15;
@@ -26,12 +27,12 @@
     </script>
 </head>
 <body>
-    <h1>{{ round.name }}</h1>
+    <h1>{{ subject}}</h1>
     <div id="timer">15 seconds remaining</div>
     <form id="question-form" method="post" action="{% url 'submit_answer' round.id question_index %}">
         {% csrf_token %}
         <div class="question">
-            <p>{{ question.question_text }}</p>
+            <p>{{ question}}</p>
             <div class="options">
                 <label><input type="radio" name="answer" value="{{ question.option1 }}"> {{ question.option1 }}</label>
                 <label><input type="radio" name="answer" value="{{ question.option2 }}"> {{ question.option2 }}</label>

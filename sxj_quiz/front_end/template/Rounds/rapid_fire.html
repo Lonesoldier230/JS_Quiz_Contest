@@ -1,15 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+{% load static %}
 <head>
-    <title>Quiz</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buzzer Round</title>
+    <title>Quiz Page</title>
     <link rel="stylesheet" href="{% static 'style/styles.css' %}">
+    <style>
+        /* Additional styling for answer reveal */
+        .hidden {
+            display: none;
+        }
+    </style>
     <script>
         function startTimer(duration, display) {
             var timer = duration, minutes, seconds;
-            setInterval(function () {
+            var interval = setInterval(function () {
                 minutes = parseInt(timer / 60, 10);
                 seconds = parseInt(timer % 60, 10);
 
@@ -19,30 +25,82 @@
                 display.textContent = minutes + ":" + seconds;
 
                 if (--timer < 0) {
+                    clearInterval(interval);
                     document.getElementById("quiz_form").submit();
                 }
+
+                localStorage.setItem("remainingTime", timer);
             }, 1000);
+
+            // Clear timer from localStorage when leaving the page
+            window.addEventListener('beforeunload', function() {
+                if (window.location.href.includes('back_to_rounds')) {
+                    localStorage.removeItem('remainingTime');
+                }
+            });
         }
 
-        window.onload = function () {
-            var thirtyFiveSeconds = 35,
-                display = document.querySelector('#time');
-            startTimer(thirtyFiveSeconds, display);
-        };
+        document.addEventListener('DOMContentLoaded', function () {
+            var storedTime = localStorage.getItem("remainingTime");
+            var timeLeft = storedTime ? parseInt(storedTime) : 35;
+            var display = document.querySelector('#time');
+            startTimer(timeLeft, display);
+
+            var revealButton = document.getElementById('reveal_answer');
+            var answer = document.getElementById('answer');
+            var countdownElement = document.getElementById('countdown');
+
+            var revealTimeLeft = 15;  // Adjust timer duration for reveal as needed
+            var revealTimer = setInterval(function () {
+                revealTimeLeft--;
+                countdownElement.textContent = revealTimeLeft;
+                if (revealTimeLeft <= 0) {
+                    clearInterval(revealTimer);
+                }
+            }, 1000);
+
+            revealButton.addEventListener('click', function () {
+                answer.classList.remove('hidden');
+                revealButton.style.display = 'none'; // Hide button after answer is revealed
+            });
+
+            document.getElementById('next_question').addEventListener('click', function () {
+                // Save current time when navigating to next question
+                localStorage.setItem('remainingTime', timeLeft);
+            });
+
+            document.getElementById('back_to_rounds').addEventListener('click', function () {
+                // Clear remaining time when navigating back to rounds
+                localStorage.removeItem('remainingTime');
+            });
+        });
     </script>
 </head>
-<body>
-    <h1>Quiz</h1>
-    <form id="quiz_form" method="POST">
-        {% csrf_token %}
-        {% for question in questions %}
-            <div>
-                <p>{{ question.question_text }}</p>
-                <input type="text" name="question_{{ forloop.counter0 }}">
-            </div>
-        {% endfor %}
-        <button type="submit">Submit</button>
-    </form>
-    <div>Time left: <span id="time">00:35</span></div>
+<body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
+    <div class="container">
+        <p id="question" style="font-size: 45px; color:antiquewhite;">{{ question }}</p>
+        <button class="button-hideAfterClick" id="reveal_answer">Reveal Answer</button>
+        <p id="answer" class="hidden" style="font-size: 30px; color:antiquewhite;">{{ answer }}</p>
+        <form id="quiz_form" method="POST">
+            {% csrf_token %}
+            {% for question in questions %}
+                <div>
+                    <p>{{ question.question_text }}</p>
+                    <input type="text" name="question_{{ forloop.counter0 }}">
+                    {% if question.image %}
+                        <img src="{% static 'images/'|add:question.image %}" alt="Question Image" style="max-width: 100%; height: auto;">
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit">Submit</button>
+        </form>
+        {% if iter < limit %}
+            <a id="next_question" href="{% url 'round:common' round='rapid_fire' iter=iter|add:'1' %}" class="button">Next Question</a>
+        {% endif %}
+        <a id="back_to_rounds" href="{% url 'round:main' %}" class="button">Back to Rounds</a>
+    </div>
+    <div class="bottom-right-container">
+        <p id="timer">Time left: <span id="time">00:35</span></p>
+    </div>
 </body>
 </html>

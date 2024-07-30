@@ -14,6 +14,7 @@ class Que_ans(models.Model):
     round = models.ForeignKey(Round, on_delete=models.CASCADE)
     question = models.CharField(max_length=200)
     answer = models.CharField(max_length=200)
+    file = models.FileField(upload_to=file_path, null = True, blank = True)
     def __str__(self):
         return self.question
     
@@ -23,13 +24,6 @@ class MixedBag(models.Model):
             
     def __str__(self):
         return self.subject
-    
-class Au_Vis(models.Model):
-    ques = models.CharField(max_length=400)
-    image = models.FileField(upload_to=file_path)
-    answr = models.CharField(max_length=50)
-    def __str__(self):
-        return self.ques
     
 class Multiple(models.Model):
     ques = models.CharField(max_length=300)

@@ -25,10 +25,10 @@
         <a href="{% url "round:common" round='rapid_fire' iter=round3%}"><button style="width:70%" onclick="startRound(3)" class="button-left">Round 3<br>Rapid Fire Round</button></a> <a href="{% url "rule" 3%}"><button style="width:30%" class="button-right">Rules</button></a>
     </div><br>
         <div class="btn-group" style="width:100%">
-        <a href="{% url "round:common" round='buzzer' iter=round4%}"><button  style="width:70%" onclick="startRound(4)" class="button-left">Round 4<br>Rapid Fire Round</button></a> <a href="{% url "rule" 4%}"><button style="width:30%" class="button-right">Rules</button></a>
+        <a href="{% url "round:common" round='buzzer' iter=round4%}"><button  style="width:70%" onclick="startRound(4)" class="button-left">Round 4<br>Buzzer Round</button></a> <a href="{% url "rule" 4%}"><button style="width:30%" class="button-right">Rules</button></a>
     </div><br>
         <div class="btn-group" style="width:100%">
-        <a href={% url "round:auvis" pk=round5 %}><button style="width:70%" onclick="startRound(5)" class="button-left">Round 5<br>Audio Visual</button></a> <a href="{% url "rule" 5 %}"><button href="{% url "rule" 5 %}" style="width:30%" class="button-right">Rules</button></a>
+        <a href={% url "round:common" round='audio_visual' iter=round5 %}><button style="width:70%" onclick="startRound(5)" class="button-left">Round 5<br>Audio Visual</button></a> <a href="{% url "rule" 5 %}"><button href="{% url "rule" 5 %}" style="width:30%" class="button-right">Rules</button></a>
     </div><br>
         <div class="btn-group" style="width:100%">
         <a href="{% url "round:multiple" pk=round6%}"><button style="width:70%" onclick="startRound(6)" class="button-left">Round 6<br>Multiple Choice</button></a> <a href="{% url "rule" 6%}"><button style="width:30%" class="button-right">Rules</button><br></a>

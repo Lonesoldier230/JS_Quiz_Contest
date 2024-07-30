@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views import View
-from .models import Que_ans, MixedBag, Au_Vis, Multiple, Memory
+import random
+from .models import Que_ans, MixedBag, Multiple, Memory
 
 
 # Create your views here.
@@ -29,6 +30,7 @@ def common(request, round, iter):
         "answer":q_na[iter - 1].answer,
         "iter":iter,
         "limit": len(q_na),
+        "file":q_na[iter - 1].file,
         "round":request.session.get(f"{round.lower()}",0)
     }
     
@@ -44,36 +46,15 @@ def mix_bag(request, subject, iter):
     mi = MixedBag.objects.get(subject = str(subject))
     di = mi.q_ans
     
-    try:
-        ctxt = {
+    ctxt = {
+            "subject":subject,
             "question":list(di.keys())[iter - 1],
             "answer":list(di.values())[iter - 1],
             "iter":iter,
             "limit": len(di)
         }
-    except IndexError:
-        return render(request, '404.html')
     
     return render(request, 'Rounds/mixed_bag.html', ctxt)
-
-
-# AudioVisual/<int:pk>
-def visual_a(request, pk):
-    try:
-        db = Au_Vis.objects.get(pk = pk)
-    except:
-        return render(request, '404.html')
-    
-    ctxt = {
-        "question":db.ques,
-        "answer":db.answr,
-        "image_url":db.image.url,
-        "limit":len(Au_Vis.objects.all())
-    }
-    
-    request.session["audio_visual"] = int(pk)
-    return render(request, 'Rounds/audio_visual.html',context=ctxt)
-
 
 # Multiple/<int:pk>
 def m_choice(request, pk):
@@ -85,7 +66,7 @@ def m_choice(request, pk):
     ctxt = {
         "question":zeek.ques,
         "answer":zeek.answer,
-        "choices":zeek.choi,
+        "choices":random.shuffle(zeek.choi),
         "limit":len(Multiple.objects.all())
     }
     
