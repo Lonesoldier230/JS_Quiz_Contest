@@ -44,12 +44,15 @@ def mix_bag(request, subject, iter):
     mi = MixedBag.objects.get(subject = str(subject))
     di = mi.q_ans
     
-    ctxt = {
+    try:
+        ctxt = {
             "question":list(di.keys())[iter - 1],
             "answer":list(di.values())[iter - 1],
             "iter":iter,
             "limit": len(di)
         }
+    except IndexError:
+        return render(request, '404.html')
     
     return render(request, 'Rounds/mixed_bag.html', ctxt)
 
