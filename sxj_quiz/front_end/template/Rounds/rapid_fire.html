@@ -38,6 +38,16 @@
                     localStorage.removeItem('remainingTime');
                 }
             });
+
+            // Save remaining time to localStorage when navigating to the next question
+            document.getElementById('next_question').addEventListener('click', function () {
+                localStorage.setItem('remainingTime', timer);
+            });
+
+            // Clear remaining time from localStorage when navigating back to rounds
+            document.getElementById('back_to_rounds').addEventListener('click', function () {
+                localStorage.removeItem('remainingTime');
+            });
         }
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -63,23 +73,13 @@
                 answer.classList.remove('hidden');
                 revealButton.style.display = 'none'; // Hide button after answer is revealed
             });
-
-            document.getElementById('next_question').addEventListener('click', function () {
-                // Save current time when navigating to next question
-                localStorage.setItem('remainingTime', timeLeft);
-            });
-
-            document.getElementById('back_to_rounds').addEventListener('click', function () {
-                // Clear remaining time when navigating back to rounds
-                localStorage.removeItem('remainingTime');
-            });
         });
     </script>
 </head>
 <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
     <div class="container">
         <p id="question" style="font-size: 45px; color:antiquewhite;">{{ question }}</p>
-        <button class="button-hideAfterClick" id="reveal_answer">Reveal Answer</button>
+
         <p id="answer" class="hidden" style="font-size: 30px; color:antiquewhite;">{{ answer }}</p>
         <form id="quiz_form" method="POST">
             {% csrf_token %}
@@ -92,7 +92,6 @@
                     {% endif %}
                 </div>
             {% endfor %}
-            <button type="submit">Submit</button>
         </form>
         {% if iter < limit %}
             <a id="next_question" href="{% url 'round:common' round='rapid_fire' iter=iter|add:'1' %}" class="button">Next Question</a>
