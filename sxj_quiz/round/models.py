@@ -41,5 +41,12 @@ class Multiple(models.Model):
 
 class Memory(models.Model):
     words = models.JSONField(default=list) 
+    
+    def save(self, *args, **kwargs):
+        if len(self.words) != 7:
+            raise ValueError
+        else:
+            super().save()
+    
     def __str__(self):
-        return self.pk
+        return self.words[0]

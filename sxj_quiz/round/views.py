@@ -92,7 +92,7 @@ def recall(request, pk):
         return render(request, '404.html')
     
     ctxt = {
-        "words":db
+        "words":db.words
     }
     
     request.session["recall"] = int(pk)
