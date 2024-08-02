@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Page</title>
@@ -8,6 +9,18 @@
     <style>
         .hidden {
             display: none;
+                
+                width: 450px;
+                padding: 10px 20px;
+                align-items: center;
+                background-color: #000546;
+                color: white;
+                text-decoration: none;
+                font-size: 16px;
+                margin: 10px;
+                border: none;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
         }
         .visible {
             display: block;
@@ -27,7 +40,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var words = {{ words|safe }};
-            var answers = {{ answers|safe }};
             var wordContainer = document.getElementById('word-container');
             var countdownElement = document.getElementById('countdown');
             var revealButton = document.getElementById('reveal_button');
@@ -63,7 +75,7 @@
             revealButton.addEventListener('click', function() {
                 var html = '';
                 for (var i = 0; i < words.length; i++) {
-                    html += '<p>' + words[i] + ': ' + answers[i] + '</p>';
+                    html += '<p>' + words[i];
                 }
                 answersContainer.innerHTML = html;
                 answersContainer.classList.remove('hidden');

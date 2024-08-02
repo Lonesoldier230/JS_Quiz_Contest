@@ -87,8 +87,8 @@
                 <div>
                     <p>{{ question.question_text }}</p>
                     <input type="text" name="question_{{ forloop.counter0 }}">
-                    {% if question.image %}
-                        <img src="{% static 'images/'|add:question.image %}" alt="Question Image" style="max-width: 100%; height: auto;">
+                    {% if file != None %}
+                        <img src="{{file}}" alt="Question Image" style="max-width: 100%; height: auto;">
                     {% endif %}
                 </div>
             {% endfor %}
