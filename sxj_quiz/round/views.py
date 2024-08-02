@@ -23,7 +23,7 @@ class Main(View):
 def common(request, round, iter):
     q_na = Que_ans.objects.filter(round__name__iexact = round.replace("_"," "))
     if len(q_na) < 1 or iter > len(q_na) :
-        return render(request, 'Round/questions_finished.html')
+        return render(request, 'Rounds/questions_finished.html')
     else:
         request.session[f"{round.lower()}"] = int(iter) + 1 
     
