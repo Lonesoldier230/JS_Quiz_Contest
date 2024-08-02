@@ -6,39 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Page</title>
     <link rel="stylesheet" href="{% static 'style/styles.css' %}">
-    <style>
-        /* Additional styling for answer reveal */
-        .hidden {
-            display: none;
-        }
-        .media-container {
-            text-align: center;
-        }
-        .question-media {
-            max-width: 100%; /* Adjust as needed */
-            height: auto;
-            display: block;
-            margin: 0 auto;
-        }
-    </style>
+    
 </head>
 <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
     <div class="container">
-        <div class="media-container">
-            {% if media_type == "image" and media_url != None %}
-                <img src="{{ media_url }}" alt="Question Image" class="question-media">
-            {% elif media_type == "video" and media_url != None %}
-                <video controls class="question-media">
-                    <source src="{{ media_url }}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            {% elif media_type == "audio" and media_url != None %}
-                <audio controls class="question-media">
-                    <source src="{{ media_url }}" type="audio/mpeg">
-                    Your browser does not support the audio element.
-                </audio>
-            {% endif %}
-        </div>
         <p id="question" style="font-size: 45px; color: antiquewhite;">Questions are Finished for this round</p>
         <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
     </div>
