@@ -1,44 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+{% load static %}
 <head>
-    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="{% static 'style/style.css' %}">
-    <title>Quiz Contest</title>
+    <title>Quiz Page</title>
+    <link rel="stylesheet" href="{% static 'style/styles.css' %}">
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        /* Additional styling for answer reveal */
+        .hidden {
+            display: none;
         }
-        h1, h2 {
-            text-align: center;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            margin: 10px 0;
-            text-align: center;
-        }
-        a {
-            text-decoration: none;
-            color: #007BFF;
-            font-size: 18px;
-        }
-        a:hover {
-            text-decoration: underline;
+        .question-image {
+            max-width: 100%; /* Adjust as needed */
+            height: auto;
+            display: block;
+            margin: 0 auto;
         }
     </style>
 </head>
-<body>
-    <h1>Welcome to the Quiz Contest</h1>
-    <h2>Select a Round</h2>
-    <ul>
-        {% for round in subjects %}
-            <li><button class="button"><a href="{% url 'round:mix' subject=round iter=1%}">{{ round }}</a></button></li>
-        {% endfor %}    
-    </ul>
+<body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
+    <div class="container">
+    <h1>Welcome to the Quiz Contest</h1></br>
+        <h2>Select a Round</h2></br>
+
+            {% for round in subjects %}
+                <a href="{% url 'round:mix' subject=round iter=1%}"><button class="button">{{ round }}</button></a><br>
+            {% endfor %}    
+    </div>
+    <div class="bottom-right-container">
+        <p id="timer">Time left: <span id="countdown">15</span> seconds</p>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var revealButton = document.getElementById('reveal_answer');
+            var answer = document.getElementById('answer');
+            var countdownElement = document.getElementById('countdown');
+            var nextQuestionButton = document.getElementById('next_question');
+            var backToRoundsButton = document.getElementById('back_to_rounds');
+
+  
+            timeLeft=15;
+            // Initialize countdown timer
+            var timer = setInterval(updateCountdown, 1000);
+
+            function updateCountdown() {
+                timeLeft--;
+                countdownElement.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                }
+                localStorage.setItem("remainingTime", timeLeft);
+            }
+
+            // Reveal answer logic
+            revealButton.addEventListener('click', function() {
+                answer.classList.remove('hidden');
+                revealButton.style.display = 'none'; // Hide button after answer is revealed
+            });
+
+            // Save remaining time when navigating to the next question
+            nextQuestionButton.addEventListener('click', function() {
+                localStorage.setItem('remainingTime', timeLeft);
+            });
+
+            // Clear remaining time when navigating back to rounds
+            backToRoundsButton.addEventListener('click', function() {
+                localStorage.removeItem('remainingTime');
+            });
+        });
+    </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
