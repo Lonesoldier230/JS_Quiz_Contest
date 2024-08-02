@@ -37,7 +37,7 @@
     <h2>Select a Round</h2>
     <ul>
         {% for round in subjects %}
-            <li><button><a href="{% url 'round:mix' subject=round iter=1%}">{{ round }}</a></button></li>
+            <li><button class="button"><a href="{% url 'round:mix' subject=round iter=1%}">{{ round }}</a></button></li>
         {% endfor %}    
     </ul>
 </body>
