@@ -25,12 +25,17 @@ def common(request, round, iter):
     if len(q_na) < 1:
         return render(request, '404.html')
     
+    try:
+        file = q_na[iter -1].file.url
+    except:
+        file = None
+    
     ctxt = {
         "question":q_na[iter - 1].question,
         "answer":q_na[iter - 1].answer,
         "iter":iter,
         "limit": len(q_na),
-        "file":q_na[iter - 1].file,
+        "file":file,
         "round":request.session.get(f"{round.lower()}",0)
     }
     

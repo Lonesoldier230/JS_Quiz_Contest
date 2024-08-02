@@ -22,7 +22,7 @@
 <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
     <div class="container">
         {% if file != None %}
-            <img src="{{file.url}}" alt="Question Image" class="question-image">
+            <img src="{{file}}" alt="Question Image" class="question-image">
         {% endif %}
         <p id="question" style="font-size: 45px; color: antiquewhite;">{{ question }}</p>
         <button class="button-hideAfterClick" id="reveal_answer">Reveal Answer</button>
