@@ -47,8 +47,8 @@
         {% endif %}
         
         <div id="options">
-            {% for option in choi %}
-                <div class="option" data-option="{{ option }}">{{ option }}</div>
+            {% for option in choices %}
+                <div class="option" data-option="{{option}}">{{option}}</div>
             {% empty %}
                 <p>No options available</p>
             {% endfor %}

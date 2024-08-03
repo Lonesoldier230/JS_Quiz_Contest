@@ -25,16 +25,16 @@
 <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
     <div class="container">
         <div class="media-container">
-            {% if media_type == "image" and media_url != None %}
-                <img src="{{ media_url }}" alt="Question Image" class="question-media">
-            {% elif media_type == "video" and media_url != None %}
+            {% if file_type == "image" and file != None %}
+                <img src="{{ file }}" alt="Question Image" class="question-media">
+            {% elif file_type == "video" and file != None %}
                 <video controls class="question-media">
-                    <source src="{{ media_url }}" type="video/mp4">
+                    <source src="{{ file }}" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
-            {% elif media_type == "audio" and media_url != None %}
+            {% elif file_type == "audio" and file != None %}
                 <audio controls class="question-media">
-                    <source src="{{ media_url }}" type="audio/mpeg">
+                    <source src="{{ file }}" type="audio/mp3">
                     Your browser does not support the audio element.
                 </audio>
             {% endif %}
@@ -43,7 +43,7 @@
         <button class="button-hideAfterClick" id="reveal_answer">Reveal Answer</button>
         <p id="answer" class="hidden" style="font-size: 30px; color: antiquewhite;">{{ answer }}</p>
         {% if iter < limit %}
-            <a href="{% url 'round:common' round='general_round' iter=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
+            <a href="{% url 'round:common' round='audio_visual' iter=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
         {% endif %}
         <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
     </div>

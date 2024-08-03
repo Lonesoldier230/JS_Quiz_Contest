@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.views import View
-import random
+import json
 from .models import Que_ans, MixedBag, Multiple, Memory
-
+from django.contrib.staticfiles import finders
 
 # Create your views here.
 class Main(View):
@@ -24,11 +24,17 @@ def common(request, round, iter):
     q_na = Que_ans.objects.filter(round__name__iexact = round.replace("_"," "))
     if len(q_na) < 1 or iter > len(q_na) :
         return render(request, 'Rounds/questions_finished.html')
-    else:
-        request.session[f"{round.lower()}"] = int(iter) + 1 
+    request.session[f"{round.lower()}"] = int(iter) + 1 
     
+    with open (finders.find("json/file_type.json"), "r") as js:
+        types = json.load(js)
+        
+    file_type = None
     try:
-        file = q_na[iter -1].file.url
+        file = q_na[iter - 1].file.url
+        for key, val in types.items():
+            if file.split(".")[-1].lower() in val:
+                file_type = key
     except:
         file = None
     
@@ -38,8 +44,10 @@ def common(request, round, iter):
         "iter":iter,
         "limit": len(q_na),
         "file":file,
+        "file_type":file_type,
         "round":request.session.get(f"{round.lower()}",0)
     }
+    
     return render(request, f'Rounds/{round.lower()}.html', context=ctxt)
     #return render(request, f'Rounds/general_round.html', context=ctxt)
 
@@ -71,7 +79,7 @@ def m_choice(request, pk):
     ctxt = {
         "question":zeek.ques,
         "answer":zeek.answer,
-        "choices":random.shuffle(zeek.choi),
+        "choices":zeek.choi,
         "limit":len(Multiple.objects.all())
     }
     

@@ -1,0 +1,19 @@
+{   
+    "audio": [
+        "mp3",
+        "wav",
+        "wma",
+        "aac"
+    ],
+    "video": [
+        "mp4",
+        "mov",
+        "webm",
+        "mkv"
+    ],
+    "image":[
+        "jpeg",
+        "jpg",
+        "png"
+    ]
+}

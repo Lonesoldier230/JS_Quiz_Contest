@@ -1,12 +1,14 @@
 from django.db import models
 import time
 
+
 def file_path(instance, name):
     return str(int(time.time())) + f"/{name}"
     
 
 class Round(models.Model):
     name = models.CharField(max_length=40, blank=True)
+    
     def __str__(self):
         return self.name
     
@@ -15,8 +17,10 @@ class Que_ans(models.Model):
     question = models.CharField(max_length=200)
     answer = models.CharField(max_length=200)
     file = models.FileField(upload_to=file_path, null = True, blank = True)
+    
     def __str__(self):
         return self.question
+
     
 class MixedBag(models.Model):
     subject = models.CharField(max_length=30)
