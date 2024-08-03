@@ -93,7 +93,22 @@
         {% endif %}
 
         <p id="answer" class="hidden" style="font-size: 30px; color:antiquewhite;">{{ answer }}</p>
+<<<<<<< HEAD
 
+=======
+        <form id="quiz_form" method="POST">
+            {% csrf_token %}
+            {% for question in questions %}
+                <div>
+                    <p>{{ question.question_text }}</p>
+                    <input type="text" name="question_{{ forloop.counter0 }}">
+                    {% if file != None %}
+                        <img src="{{file}}" alt="Question Image" style="max-width: 100%; height: auto;">
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </form>
+>>>>>>> 8ed54a69443c287d2d66e015ce96ab8c8a83e71f
         {% if iter < limit %}
             <a id="next_question" href="{% url 'round:common' round='general_round' iter=iter|add:'1' %}" class="button">Next Question</a>
         {% endif %}

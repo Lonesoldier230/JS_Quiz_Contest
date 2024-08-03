@@ -22,8 +22,10 @@ class Main(View):
 # round/<str:round>/<int:iter>
 def common(request, round, iter):
     q_na = Que_ans.objects.filter(round__name__iexact = round.replace("_"," "))
-    if len(q_na) < 1:
-        return render(request, '404.html')
+    if len(q_na) < 1 or iter > len(q_na) :
+        return render(request, 'Rounds/questions_finished.html')
+    else:
+        request.session[f"{round.lower()}"] = int(iter) + 1 
     
     try:
         file = q_na[iter -1].file.url
@@ -38,8 +40,6 @@ def common(request, round, iter):
         "file":file,
         "round":request.session.get(f"{round.lower()}",0)
     }
-    
-    request.session[f"{round.lower()}"] = int(iter)
     return render(request, f'Rounds/{round.lower()}.html', context=ctxt)
     #return render(request, f'Rounds/general_round.html', context=ctxt)
 
