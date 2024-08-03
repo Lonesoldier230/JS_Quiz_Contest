@@ -1,52 +1,115 @@
 <!DOCTYPE html>
-{% load static %}
 <html lang="en">
-  <head>
-    <title>Classic Next Pheasant</title>
-    <meta property="og:title" content="Classic Next Pheasant" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta charset="utf-8" />
-    <meta property="twitter:card" content="summary_large_image" />
-
-    <style data-tag="reset-style-sheet">
-      html {  line-height: 1.15;}body {  margin: 0;}* {  box-sizing: border-box;  border-width: 0;  border-style: solid;}p,li,ul,pre,div,h1,h2,h3,h4,h5,h6,figure,blockquote,figcaption {  margin: 0;  padding: 0;}button {  background-color: transparent;}button,input,optgroup,select,textarea {  font-family: inherit;  font-size: 100%;  line-height: 1.15;  margin: 0;}button,select {  text-transform: none;}button,[type="button"],[type="reset"],[type="submit"] {  -webkit-appearance: button;}button::-moz-focus-inner,[type="button"]::-moz-focus-inner,[type="reset"]::-moz-focus-inner,[type="submit"]::-moz-focus-inner {  border-style: none;  padding: 0;}button:-moz-focus,[type="button"]:-moz-focus,[type="reset"]:-moz-focus,[type="submit"]:-moz-focus {  outline: 1px dotted ButtonText;}a {  color: inherit;  text-decoration: inherit;}input {  padding: 2px 4px;}img {  display: block;}html { scroll-behavior: smooth  }
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Page</title>
+    <link rel="stylesheet" href="{% static 'style/styles.css' %}">
+    <style>
+        .hidden {
+            display: none;
+        }
+        .question-image, .question-audio {
+            max-width: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+        .option {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        .correct {
+            background-color: green;
+            color: white;
+        }
+        .incorrect {
+            background-color: red;
+            color: white;
+        }
     </style>
-    <style data-tag="default-style-sheet">
-      html {
-        font-family: Inter;
-        font-size: 16px;
-      }
-
-      body {
-        font-weight: 400;
-        font-style:normal;
-        text-decoration: none;
-        text-transform: none;
-        letter-spacing: normal;
-        line-height: 1.15;
-        color: var(--dl-color-theme-neutral-dark);
-        background-color: var(--dl-color-theme-neutral-light);
-
-        fill: var(--dl-color-theme-neutral-dark);
-      }
-    </style>
-  </head>
-  <body>
-    <link rel="stylesheet" href="{% static "style/style_mchoice.css" %}" />
-    <div>
-      <link href="{% static "style/index.css" %}" rel="stylesheet" />
-
-      <div class="home-container">
-        <button type="button" class="home-button button">{{choices.0}}</button>
-        <button type="button" class="home-button1 button">{{choices.1}}</button>
-        <button type="button" class="home-button2 button">{{choices.2}}</button>
-        <h2 class="home-text">{{question}}</h2>
-        <button type="button" class="home-button3 button">{{choices.3}}</button>
-        <h1 class="home-text1">
-          <span>Multiple Choice</span>
-          <br />
-        </h1>
-      </div>
+</head>
+<body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
+    <div class="container">
+        {% if question_type == 'image' and file %}
+            <img src="{{file}}" alt="Question Image" class="question-image">
+        {% elif question_type == 'audio' and file %}
+            <audio controls class="question-audio">
+                <source src="{{file}}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        {% else %}
+            <p id="question" style="font-size: 45px; color: antiquewhite;">{{ question }}</p>
+        {% endif %}
+        
+        <div id="options">
+            {% for option in choi %}
+                <div class="option" data-option="{{ option }}">{{ option }}</div>
+            {% empty %}
+                <p>No options available</p>
+            {% endfor %}
+        </div>
+        <p id="result" class="hidden" style="font-size: 30px; color: antiquewhite;">{{ answer }}</p>
+        {% if iter < limit %}
+            <a href="{% url 'round:common' round='general_round' iter=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
+        {% endif %}
+        <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
     </div>
-  </body>
+    <div class="bottom-right-container">
+        <p id="timer">Time left: <span id="countdown">15</span> seconds</p>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var options = document.querySelectorAll('.option');
+            var result = document.getElementById('result');
+            var countdownElement = document.getElementById('countdown');
+            var nextQuestionButton = document.getElementById('next_question');
+            var backToRoundsButton = document.getElementById('back_to_rounds');
+
+            var correctAnswer = "{{ answer }}";
+            var timeLeft = 15;
+            var timer = setInterval(updateCountdown, 1000);
+
+            function updateCountdown() {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    countdownElement.textContent = timeLeft;
+                    localStorage.setItem("remainingTime", timeLeft);
+                } else {
+                    clearInterval(timer);
+                }
+            }
+
+            options.forEach(function(option) {
+                option.addEventListener('click', function() {
+                    if (option.getAttribute('data-option') === correctAnswer) {
+                        option.classList.add('correct');
+                        result.textContent = 'Correct!';
+                    } else {
+                        option.classList.add('incorrect');
+                        result.textContent = 'Incorrect!';
+                    }
+                    result.classList.remove('hidden');
+                    options.forEach(function(opt) {
+                        opt.style.pointerEvents = 'none';
+                    });
+                });
+            });
+
+            // Save remaining time when navigating to the next question
+            nextQuestionButton.addEventListener('click', function() {
+                localStorage.setItem('remainingTime', timeLeft);
+            });
+
+            // Clear remaining time when navigating back to rounds
+            backToRoundsButton.addEventListener('click', function() {
+                localStorage.removeItem('remainingTime');
+            });
+        });
+    </script>
+</body>
 </html>
