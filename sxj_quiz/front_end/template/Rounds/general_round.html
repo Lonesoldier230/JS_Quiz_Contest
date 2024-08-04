@@ -17,6 +17,33 @@
             display: block;
             margin: 0 auto;
         }
+        .bottom-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+        }
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            font-size: 20px; /* Adjust font size as needed */
+            color: antiquewhite;
+        }
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        .button {
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
@@ -28,13 +55,17 @@
         <button class="button-hideAfterClick" id="reveal_answer">Reveal Answer</button>
         <button class="button-hideAfterClick" id="time">Pass Question</button>
         <p id="answer" class="hidden" style="font-size: 30px; color: antiquewhite;">{{ answer }}</p>
-        {% if iter < limit %}
-            <a href="{% url 'round:common' round='general_round' iter=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
-        {% endif %}
-        <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
     </div>
-    <div class="bottom-right-container">
-        <p id="timer">Time left: <span id="countdown">15</span> seconds</p>
+    <div class="bottom-container">
+        <div class="timer-container">
+            <p id="timer">Time left: <span id="countdown">15</span> seconds</p>
+        </div>
+        <div class="button-container">
+            {% if iter < limit %}
+                <a href="{% url 'round:common' round='general_round' iter=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
+            {% endif %}
+            <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
+        </div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
