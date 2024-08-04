@@ -106,7 +106,7 @@
             {% endfor %}
         </form>
         {% if iter < limit %}
-            <a id="next_question" href="{% url 'round:common' round='rapid_fire' iter=iter|add:'1' %}" class="button">Next Question</a>
+        <a id="next_question" href="{% url 'round:common' round='rapid_fire' iter=iter|add:'1' %}" class="button">Next Question</a>
         {% endif %}
         <a id="back_to_rounds" href="{% url 'round:main' %}" class="button">Back to Rounds</a>
     </div>
