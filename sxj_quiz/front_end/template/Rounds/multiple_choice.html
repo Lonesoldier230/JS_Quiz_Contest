@@ -55,7 +55,7 @@
         </div>
         <p id="result" class="hidden" style="font-size: 30px; color: antiquewhite;">{{ answer }}</p>
         {% if iter < limit %}
-            <a href="{% url 'round:common' round='general_round' iter=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
+            <a href="{% url 'round:multiple' pk=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
         {% endif %}
         <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
     </div>
