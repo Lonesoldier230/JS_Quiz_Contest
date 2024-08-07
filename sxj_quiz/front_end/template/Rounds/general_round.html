@@ -26,7 +26,7 @@
         {% endif %}
         <p id="question" style="font-size: 45px; color: antiquewhite;">{{ question }}</p>
         <button class="button-hideAfterClick" id="reveal_answer">Reveal Answer</button>
-        <button class="button-hideAfterClick" id="time">Pass Question</button>
+        <button class="button-pass" id="time">Pass Question</button>
         <p id="answer" class="hidden" style="font-size: 30px; color: antiquewhite;">{{ answer }}</p>
         {% if iter < limit %}
             <a href="{% url 'round:common' round='general_round' iter=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
@@ -67,7 +67,6 @@
             addTime.addEventListener('click', function() {
                 timeLeft += additionalTime;
                 countdownElement.textContent = timeLeft;
-                addTime.style.display = 'none';
                 localStorage.setItem('remainingTime', timeLeft);
                 if (timeLeft > 0 && timer === null) {
                     timer = setInterval(updateCountdown, 1000);
