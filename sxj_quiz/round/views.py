@@ -21,7 +21,7 @@ class Main(View):
 
 # round/<str:round>/<int:iter>
 def common(request, round, iter):
-    q_na = Que_ans.objects.filter(round__name__iexact = round.replace("_"," "))
+    q_na = Que_ans.objects.filter(round__name__iexact = round.replace("_"," ")).order_by("id")
     if len(q_na) < 1 or iter > len(q_na) :
         return render(request, 'Rounds/questions_finished.html')
     request.session[f"{round.lower()}"] = int(iter) + 1 
@@ -80,6 +80,7 @@ def m_choice(request, pk):
         "question":zeek.ques,
         "answer":zeek.answer,
         "choices":zeek.choi,
+        "iter":pk,
         "limit":len(Multiple.objects.all())
     }
     
@@ -100,12 +101,14 @@ def mix_main(request):
 # Recall/<int:pk>
 def recall(request, pk):
     try:
-        db = Memory.objects.get(pk = 1)
+        db = Memory.objects.get(pk = pk)
     except:
-        return render(request, '404.html')
+        print()
+        return render(request, 'Rounds/questions_finished.html')
     
     ctxt = {
-        "words":db.words
+        "words":db.words,
+        "iter":pk
     }
     
     request.session["recall"] = int(pk)
