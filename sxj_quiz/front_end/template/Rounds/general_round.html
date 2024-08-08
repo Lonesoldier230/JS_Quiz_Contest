@@ -40,7 +40,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var revealButton = document.getElementById('reveal_answer');
-            var addTime = document.getElementById('time');
+            var addTimeButton = document.getElementById('time');
             var answer = document.getElementById('answer');
             var countdownElement = document.getElementById('countdown');
             var nextQuestionButton = document.getElementById('next_question');
@@ -66,10 +66,12 @@
             revealButton.addEventListener('click', function() {
                 answer.classList.remove('hidden');
                 revealButton.style.display = 'none'; // Hide button after answer is revealed
+                addTimeButton.disabled = true; // Disable the pass question button
+                addTimeButton.style.display = 'none';
             });
 
             // Add time logic
-            addTime.addEventListener('click', function() {
+            addTimeButton.addEventListener('click', function() {
                 timeLeft += additionalTime;
                 countdownElement.textContent = timeLeft;
                 localStorage.setItem('remainingTime', timeLeft);

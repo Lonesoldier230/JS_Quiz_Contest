@@ -55,7 +55,7 @@
             document.querySelectorAll('.round-button').forEach(function(button) {
                 button.addEventListener('click', function() {
                     var selectedRound = this.getAttribute('data-round');
-                    this.textContent = `Your selected round is: ${selectedRound}`;
+                    this.textContent = `${selectedRound}`;
                     this.disabled = true;
 
                     var selectedButtons = getCookie('selectedButtons');
