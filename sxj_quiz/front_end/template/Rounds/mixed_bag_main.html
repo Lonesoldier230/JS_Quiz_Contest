@@ -7,12 +7,11 @@
     <title>Quiz Page</title>
     <link rel="stylesheet" href="{% static 'style/styles.css' %}">
     <style>
-        /* Additional styling for answer reveal */
         .hidden {
             display: none;
         }
         .question-image {
-            max-width: 100%; /* Adjust as needed */
+            max-width: 100%;
             height: auto;
             display: block;
             margin: 0 auto;
@@ -24,8 +23,8 @@
         <h1>Welcome to the Quiz Contest</h1></br>
         <h2>Select a Round</h2></br>
         {% for round in subjects %}
-            <a href="{% url 'round:mix' subject=round iter=1%}"><button class="button">{{ forloop.counter }}</button></a><br>
-        {% endfor %}    
+            <button class="button round-button" data-round="{{ round }}">{{ round }}</button><br>
+        {% endfor %}
     </div>
     <div class="bottom-right-container">
         <p id="timer">Time left: <span id="countdown">15</span> seconds</p>
@@ -33,14 +32,10 @@
     <audio id="buzzer" src="{% static 'sounds/buzzer.mp3' %}" preload="auto"></audio>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var revealButton = document.getElementById('reveal_answer');
-            var answer = document.getElementById('answer');
             var countdownElement = document.getElementById('countdown');
-            var nextQuestionButton = document.getElementById('next_question');
-            var backToRoundsButton = document.getElementById('back_to_rounds');
             var buzzer = document.getElementById('buzzer');
-
             var timeLeft = 15;
+
             // Initialize countdown timer
             var timer = setInterval(updateCountdown, 1000);
 
@@ -54,20 +49,35 @@
                 localStorage.setItem("remainingTime", timeLeft);
             }
 
-            // Reveal answer logic
-            revealButton.addEventListener('click', function() {
-                answer.classList.remove('hidden');
-                revealButton.style.display = 'none'; // Hide button after answer is revealed
-            });
+            function hideSelectedButtons() {
+                var selectedButtons = JSON.parse(localStorage.getItem('selectedButtons')) || [];
+                selectedButtons.forEach(function(round) {
+                    var button = document.querySelector(`button[data-round='${round}']`);
+                    if (button) {
+                        button.classList.add('hidden');
+                    }
+                });
+            }
 
-            // Save remaining time when navigating to the next question
-            nextQuestionButton.addEventListener('click', function() {
-                localStorage.setItem('remainingTime', timeLeft);
-            });
+            hideSelectedButtons();
 
-            // Clear remaining time when navigating back to rounds
-            backToRoundsButton.addEventListener('click', function() {
-                localStorage.removeItem('remainingTime');
+            // Button click logic
+            document.querySelectorAll('.round-button').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var selectedRound = this.getAttribute('data-round');
+                    this.textContent = `Your selected round is: ${selectedRound}`;
+                    this.disabled = true;
+
+                    var selectedButtons = JSON.parse(localStorage.getItem('selectedButtons')) || [];
+                    if (!selectedButtons.includes(selectedRound)) {
+                        selectedButtons.push(selectedRound);
+                        localStorage.setItem('selectedButtons', JSON.stringify(selectedButtons));
+                    }
+
+                    setTimeout(function() {
+                        window.location.href = `{% url 'round:mix' subject='' %}${selectedRound}/1`;
+                    }, 5000);
+                });
             });
         });
     </script>
