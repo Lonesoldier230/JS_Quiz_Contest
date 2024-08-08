@@ -46,7 +46,7 @@
 
             var timeLeft = 15;
             var additionalTime = 5;
-            var timer = setInterval(updateCountdown, 1000);
+            var timer = null; // Timer starts as null, indicating it's not running
 
             function updateCountdown() {
                 if (timeLeft > 0) {
@@ -55,6 +55,22 @@
                     localStorage.setItem("remainingTime", timeLeft);
                 }
             }
+
+            function toggleTimer() {
+                if (timer === null) {
+                    timer = setInterval(updateCountdown, 1000);
+                } else {
+                    clearInterval(timer);
+                    timer = null;
+                }
+            }
+
+            // Key combination logic for starting/stopping the timer
+            document.addEventListener('keydown', function(event) {
+                if (event.ctrlKey && event.altKey && event.key === 't') {
+                    toggleTimer();
+                }
+            });
 
             // Reveal answer logic
             revealButton.addEventListener('click', function() {
@@ -69,7 +85,7 @@
                 addTime.style.display = 'none';
                 localStorage.setItem('remainingTime', timeLeft);
                 if (timeLeft > 0 && timer === null) {
-                    timer = setInterval(updateCountdown, 1000);
+                    toggleTimer(); // Start the timer if it's not running
                 }
             });
 

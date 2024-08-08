@@ -7,12 +7,11 @@
     <title>Quiz Page</title>
     <link rel="stylesheet" href="{% static 'style/styles.css' %}">
     <style>
-        /* Additional styling for answer reveal */
         .hidden {
             display: none;
         }
         .question-image {
-            max-width: 100%; /* Adjust as needed */
+            max-width: 100%;
             height: auto;
             display: block;
             margin: 0 auto;
@@ -40,7 +39,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var revealButton = document.getElementById('reveal_answer');
-            var addTime = document.getElementById('time');
+            var addTimeButton = document.getElementById('time');
             var answer = document.getElementById('answer');
             var countdownElement = document.getElementById('countdown');
             var nextQuestionButton = document.getElementById('next_question');
@@ -49,7 +48,7 @@
 
             var timeLeft = 15;
             var additionalTime = 5;
-            var timer = setInterval(updateCountdown, 1000);
+            var timer = null;
 
             function updateCountdown() {
                 if (timeLeft > 0) {
@@ -58,9 +57,34 @@
                     localStorage.setItem("remainingTime", timeLeft);
                 } else {
                     clearInterval(timer);
+                    timer = null;
                     buzzer.play(); // Play buzzer sound when time is over
                 }
             }
+
+            function startTimer() {
+                if (!timer) {
+                    timer = setInterval(updateCountdown, 1000);
+                }
+            }
+
+            function stopTimer() {
+                if (timer) {
+                    clearInterval(timer);
+                    timer = null;
+                }
+            }
+
+            // Start and stop the timer with Ctrl + Alt + T
+            document.addEventListener('keydown', function(event) {
+                if (event.ctrlKey && event.altKey && event.key === 't') {
+                    if (timer) {
+                        stopTimer();
+                    } else {
+                        startTimer();
+                    }
+                }
+            });
 
             // Reveal answer logic
             revealButton.addEventListener('click', function() {
@@ -69,10 +93,11 @@
             });
 
             // Add time logic
-            addTime.addEventListener('click', function() {
+            addTimeButton.addEventListener('click', function() {
                 timeLeft += additionalTime;
                 countdownElement.textContent = timeLeft;
                 localStorage.setItem('remainingTime', timeLeft);
+                startTimer(); // Restart the timer if it's not running
             });
 
             // Save remaining time when navigating to the next question

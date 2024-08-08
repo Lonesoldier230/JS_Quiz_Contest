@@ -7,16 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Round Rules</title>
 </head>
-<body class="body"  style="background-image:url('{% static "images/quiz.png" %}')">
+<body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
     <div class="container">
-        <h1>Round {{round}}</h1>
-        <p><h1>Rules</h1><br>
+        <h1>Round {{ round }}</h1>
+        <h1>Rules</h1><br>
         <ol>
             {% for i in rules %}
-                <li><h1>{{i}}</h1></li>
+                <li><h1 style="color: {% cycle 'lightblue' 'lightgreen' %};">{{ i }}</h1></li>
             {% endfor %}
         </ol>
-        <a href="{% url "round:main"%}" class="button">Back to Rounds</a>
+        <a href="{% url 'round:main' %}" class="button">Back to Rounds</a>
     </div>
 </body>
 </html>
