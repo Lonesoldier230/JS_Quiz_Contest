@@ -33,7 +33,7 @@
         <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
     </div>
     <div class="bottom-right-container">
-        <p id="timer">Time left: <span id="countdown">15</span> seconds</p>
+        <h2><p id="timer">Time left: <span id="countdown">15</span> seconds</p></h2>
     </div>
     <audio id="buzzer" src="{% static 'sounds/buzzer.mp3' %}" preload="auto"></audio>
     <script>
@@ -90,6 +90,8 @@
             revealButton.addEventListener('click', function() {
                 answer.classList.remove('hidden');
                 revealButton.style.display = 'none'; // Hide button after answer is revealed
+                addTimeButton.disabled = true; // Disable the pass question button
+                addTimeButton.style.display = 'none';
             });
 
             // Add time logic

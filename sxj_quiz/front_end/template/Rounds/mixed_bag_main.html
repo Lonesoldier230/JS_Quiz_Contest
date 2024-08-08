@@ -26,24 +26,9 @@
             <button class="button round-button" data-round="{{ round }}">{{ forloop.counter }}</button><br>
         {% endfor %}
     </div>
-    <audio id="buzzer" src="{% static 'sounds/buzzer.mp3' %}" preload="auto"></audio>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var buzzer = document.getElementById('buzzer');
-            var timeLeft = 15;
-
-            // Initialize countdown timer
-            var timer = setInterval(updateCountdown, 1000);
-
-            function updateCountdown() {
-                timeLeft--;
-                countdownElement.textContent = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    buzzer.play();  // Play buzzer sound when time is over
-                }
-                document.cookie = "remainingTime=" + timeLeft;
-            }
 
             function getCookie(name) {
                 var value = "; " + document.cookie;
@@ -70,7 +55,7 @@
             document.querySelectorAll('.round-button').forEach(function(button) {
                 button.addEventListener('click', function() {
                     var selectedRound = this.getAttribute('data-round');
-                    this.textContent = `Your selected round is: ${selectedRound}`;
+                    this.textContent = `${selectedRound}`;
                     this.disabled = true;
 
                     var selectedButtons = getCookie('selectedButtons');
