@@ -26,28 +26,10 @@
             <button class="button round-button" data-round="{{ round }}">{{ forloop.counter }}</button><br>
         {% endfor %}
     </div>
-    <div class="bottom-right-container">
-        <p id="timer">Time left: <span id="countdown">15</span> seconds</p>
-    </div>
     <audio id="buzzer" src="{% static 'sounds/buzzer.mp3' %}" preload="auto"></audio>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var countdownElement = document.getElementById('countdown');
             var buzzer = document.getElementById('buzzer');
-            var timeLeft = 15;
-
-            // Initialize countdown timer
-            var timer = setInterval(updateCountdown, 1000);
-
-            function updateCountdown() {
-                timeLeft--;
-                countdownElement.textContent = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    buzzer.play();  // Play buzzer sound when time is over
-                }
-                localStorage.setItem("remainingTime", timeLeft);
-            }
 
             function hideSelectedButtons() {
                 var selectedButtons = JSON.parse(localStorage.getItem('selectedButtons')) || [];
@@ -75,7 +57,7 @@
                     }
 
                     setTimeout(function() {
-                        window.location.href = `{% url 'round:mix' subject='' %}${selectedRound}/1`;
+                        window.location.href = `{% url 'round:mix-main' %}${selectedRound}/1`;
                     }, 5000);
                 });
             });
