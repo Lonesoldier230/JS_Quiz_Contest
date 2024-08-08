@@ -23,7 +23,7 @@
         <h1>Welcome to the Quiz Contest</h1></br>
         <h2>Select a Round</h2></br>
         {% for round in subjects %}
-            <button class="button round-button" data-round="{{ round }}">{{ round }}</button><br>
+            <button class="button round-button" data-round="{{ round }}">{{ forloop.counter }}</button><br>
         {% endfor %}
     </div>
     <div class="bottom-right-container">
