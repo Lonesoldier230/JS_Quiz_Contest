@@ -46,17 +46,26 @@
                     clearInterval(timer);
                     buzzer.play();  // Play buzzer sound when time is over
                 }
-                localStorage.setItem("remainingTime", timeLeft);
+                document.cookie = "remainingTime=" + timeLeft;
+            }
+
+            function getCookie(name) {
+                var value = "; " + document.cookie;
+                var parts = value.split("; " + name + "=");
+                if (parts.length == 2) return parts.pop().split(";").shift();
             }
 
             function hideSelectedButtons() {
-                var selectedButtons = JSON.parse(localStorage.getItem('selectedButtons')) || [];
-                selectedButtons.forEach(function(round) {
-                    var button = document.querySelector(`button[data-round='${round}']`);
-                    if (button) {
-                        button.classList.add('hidden');
-                    }
-                });
+                var selectedButtons = getCookie('selectedButtons');
+                if (selectedButtons) {
+                    selectedButtons = JSON.parse(selectedButtons);
+                    selectedButtons.forEach(function(round) {
+                        var button = document.querySelector(`button[data-round='${round}']`);
+                        if (button) {
+                            button.classList.add('hidden');
+                        }
+                    });
+                }
             }
 
             hideSelectedButtons();
@@ -68,10 +77,11 @@
                     this.textContent = `Your selected round is: ${selectedRound}`;
                     this.disabled = true;
 
-                    var selectedButtons = JSON.parse(localStorage.getItem('selectedButtons')) || [];
+                    var selectedButtons = getCookie('selectedButtons');
+                    selectedButtons = selectedButtons ? JSON.parse(selectedButtons) : [];
                     if (!selectedButtons.includes(selectedRound)) {
                         selectedButtons.push(selectedRound);
-                        localStorage.setItem('selectedButtons', JSON.stringify(selectedButtons));
+                        document.cookie = 'selectedButtons=' + JSON.stringify(selectedButtons);
                     }
 
                     setTimeout(function() {
