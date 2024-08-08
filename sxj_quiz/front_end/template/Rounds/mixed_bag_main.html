@@ -21,16 +21,17 @@
 </head>
 <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
     <div class="container">
-    <h1>Welcome to the Quiz Contest</h1></br>
+        <h1>Welcome to the Quiz Contest</h1></br>
         <h2>Select a Round</h2></br>
 
-            {% for round in subjects %}
-                <a href="{% url 'round:mix' subject=round iter=1%}"><button class="button">{{ round }}</button></a><br>
-            {% endfor %}    
+        {% for round in subjects %}
+            <a href="{% url 'round:mix' subject=round iter=1%}"><button class="button">{{ round }}</button></a><br>
+        {% endfor %}    
     </div>
     <div class="bottom-right-container">
         <p id="timer">Time left: <span id="countdown">15</span> seconds</p>
     </div>
+    <audio id="buzzer" src="{% static 'sounds/buzzer.mp3' %}" preload="auto"></audio>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var revealButton = document.getElementById('reveal_answer');
@@ -38,9 +39,9 @@
             var countdownElement = document.getElementById('countdown');
             var nextQuestionButton = document.getElementById('next_question');
             var backToRoundsButton = document.getElementById('back_to_rounds');
+            var buzzer = document.getElementById('buzzer');
 
-  
-            timeLeft=15;
+            var timeLeft = 15;
             // Initialize countdown timer
             var timer = setInterval(updateCountdown, 1000);
 
@@ -49,6 +50,7 @@
                 countdownElement.textContent = timeLeft;
                 if (timeLeft <= 0) {
                     clearInterval(timer);
+                    buzzer.play();  // Play buzzer sound when time is over
                 }
                 localStorage.setItem("remainingTime", timeLeft);
             }
@@ -72,20 +74,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

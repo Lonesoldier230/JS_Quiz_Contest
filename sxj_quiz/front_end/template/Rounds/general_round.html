@@ -58,7 +58,7 @@
                     localStorage.setItem("remainingTime", timeLeft);
                 } else {
                     clearInterval(timer);
-                    buzzer.play(buzzer); // Play buzzer sound when time is over
+                    buzzer.play(); // Play buzzer sound when time is over
                 }
             }
 
@@ -73,9 +73,6 @@
                 timeLeft += additionalTime;
                 countdownElement.textContent = timeLeft;
                 localStorage.setItem('remainingTime', timeLeft);
-                if (timeLeft > 0 && timer === null) {
-                    timer = setInterval(updateCountdown, 1000);
-                }
             });
 
             // Save remaining time when navigating to the next question
