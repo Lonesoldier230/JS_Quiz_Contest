@@ -93,6 +93,7 @@ def mix_main(request):
     db = MixedBag.objects.all()
     
     ctxt = {
+        "numbers":[i for i in range(1,len(db) + 1)],
         "subjects":[i.subject for i in db]
     }
     

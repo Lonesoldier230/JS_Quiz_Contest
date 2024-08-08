@@ -23,9 +23,8 @@
     <div class="container">
         <h1>Welcome to the Quiz Contest</h1></br>
         <h2>Select a Round</h2></br>
-
         {% for round in subjects %}
-            <a href="{% url 'round:mix' subject=round iter=1%}"><button class="button">{{ round }}</button></a><br>
+            <a href="{% url 'round:mix' subject=round iter=1%}"><button class="button">{{ forloop.counter }}</button></a><br>
         {% endfor %}    
     </div>
     <div class="bottom-right-container">
