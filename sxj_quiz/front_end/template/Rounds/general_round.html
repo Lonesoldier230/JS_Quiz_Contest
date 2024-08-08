@@ -17,33 +17,6 @@
             display: block;
             margin: 0 auto;
         }
-        .bottom-container {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-        }
-        .timer-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            font-size: 20px; /* Adjust font size as needed */
-            color: antiquewhite;
-        }
-        .button-container {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-        }
-        .button {
-            margin-left: 10px;
-        }
     </style>
 </head>
 <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
@@ -53,20 +26,17 @@
         {% endif %}
         <p id="question" style="font-size: 45px; color: antiquewhite;">{{ question }}</p>
         <button class="button-hideAfterClick" id="reveal_answer">Reveal Answer</button>
-        <button class="button-hideAfterClick" id="time">Pass Question</button>
+        <button class="button-pass" id="time">Pass Question</button>
         <p id="answer" class="hidden" style="font-size: 30px; color: antiquewhite;">{{ answer }}</p>
+        {% if iter < limit %}
+            <a href="{% url 'round:common' round='general_round' iter=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
+        {% endif %}
+        <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
     </div>
-    <div class="bottom-container">
-        <div class="timer-container">
-            <p id="timer">Time left: <span id="countdown">15</span> seconds</p>
-        </div>
-        <div class="button-container">
-            {% if iter < limit %}
-                <a href="{% url 'round:common' round='general_round' iter=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
-            {% endif %}
-            <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
-        </div>
+    <div class="bottom-right-container">
+        <p id="timer">Time left: <span id="countdown">15</span> seconds</p>
     </div>
+    <audio id="buzzer" src="{% static 'sounds/buzzer.mp3' %}" preload="auto"></audio>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var revealButton = document.getElementById('reveal_answer');
@@ -75,6 +45,7 @@
             var countdownElement = document.getElementById('countdown');
             var nextQuestionButton = document.getElementById('next_question');
             var backToRoundsButton = document.getElementById('back_to_rounds');
+            var buzzer = document.getElementById('buzzer');
 
             var timeLeft = 15;
             var additionalTime = 5;
@@ -85,6 +56,9 @@
                     timeLeft--;
                     countdownElement.textContent = timeLeft;
                     localStorage.setItem("remainingTime", timeLeft);
+                } else {
+                    clearInterval(timer);
+                    buzzer.play(buzzer); // Play buzzer sound when time is over
                 }
             }
 
@@ -98,7 +72,6 @@
             addTime.addEventListener('click', function() {
                 timeLeft += additionalTime;
                 countdownElement.textContent = timeLeft;
-                addTime.style.display = 'none';
                 localStorage.setItem('remainingTime', timeLeft);
                 if (timeLeft > 0 && timer === null) {
                     timer = setInterval(updateCountdown, 1000);
