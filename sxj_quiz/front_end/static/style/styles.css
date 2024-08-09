@@ -32,7 +32,7 @@
     max-height: 20;
     max-width: 1000px;
     padding: 20px;
-    background-color: #000000;
+    background-color: #335561;
     border-radius: 8px;
     box-shadow: 30 30 10px rgba(22, 215, 8, 0.896);
 }
@@ -65,7 +65,7 @@ h1,h2 {
     width: 450px;
     padding: 10px 20px;
     align-items: center;
-    background-color: #000546;
+    background-color: #0047AB;
     color: white;
     text-decoration: none;
     font-size: 16px;
