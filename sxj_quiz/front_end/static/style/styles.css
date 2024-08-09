@@ -92,7 +92,7 @@ body, html {
     display: inline-block;
     width: 70%; /* Width for left button */
     padding: 10px 20px;
-    background: linear-gradient(to right, #357bbc, #4dffaf); /* Gradient background from blue to green */
+    background: linear-gradient(to right, #fcc200, #ffbf00); /* Gradient background from blue to green */
     color: #2f0c0b;
     text-decoration: none;
     font-size: 16px;
@@ -114,7 +114,7 @@ body, html {
     display: inline-block;
     width: 30%; /* Width for right button */
     padding: 10px 20px;
-    background: linear-gradient(to right, #4dffaf, #357bbc); /* Gradient background from green to blue */
+    background: linear-gradient(to right, #fcc200, #ffbf00); /* Gradient background from green to blue */
     color: #2f0c0b;
     text-decoration: none;
     font-size: 16px;
@@ -128,7 +128,7 @@ body, html {
 }
 
 .button-right:hover {
-    background-color: #4882cd; /* Hover effect color */
+    background-color: #fccf3a; /* Hover effect color */
 }
 
 /* Styling for the pass button */
@@ -148,7 +148,7 @@ body, html {
 }
 
 .button-pass:hover {
-    background-color: #4882cd; /* Hover effect color */
+    background-color: #fccf3a; /* Hover effect color */
 }
 
 /* Bottom container for timer */
@@ -162,15 +162,12 @@ body, html {
     background-color: #000000;
     border-radius: 8px;
     color: beige;
-    box-shadow: 30px 30px 10px rgba(22, 215, 8, 0.896);
 }
 
 /* Group button styling */
 .btn-group button {
     display: inline;
     height: 75px;
-    background: linear-gradient(to right, #4dffaf, #357bbc); /* Gradient background */
-    color: #2f0c0b; /* Button text color */
     text-decoration: none;
     font-size: 16px;
     margin: 0;
@@ -187,4 +184,38 @@ body, html {
 /* Hidden class for hiding elements */
 .hidden {
     display: none;
+}
+.container-rounds {
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background-color: #000000;
+    /* Container background color */
+    border-radius: 8px;
+    max-width: auto;
+}
+
+.button-back {
+    display: inline-block;
+    width: 450px;
+    /* Button width */
+    padding: 10px 20px;
+    background: linear-gradient(to right, #fcc200, #ffbf00);
+    /* Gradient background */
+    color: #2f0c0b;
+    /* Button text color */
+    text-decoration: none;
+    font-size: 16px;
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 18px;
+    /* Common border radius for rounded buttons */
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for base button */
+.button-back:hover {
+    background-color: #fccf3a;
+    /* Hover effect color */
 }

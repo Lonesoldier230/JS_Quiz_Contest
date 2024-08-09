@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{% static "style/styles.css" %}">
 </head>
 <body class="body" style="background-image:url({% static "images/img.png" %})">
-    <div class="container">
+    <div class="container-rounds">
         <br><br><br><br><br><br><br><br><br><br><br>
         <h1 style="color: blanchedalmond; font-family:Segoe UI;">Quiz Rounds</h1><br><br>
         <div class="btn-group" style="width:100%">
@@ -44,7 +44,7 @@
             <a href="{% url "rule" 8 %}"><button class="button-right">Rules</button><br></a>
         </div><br>
         <div class="btn-group" style="width:100%">
-            <a href="{% url "index" %}"><button class="button">Back</button></a>
+            <a href="{% url "index" %}"><button class="button-back">Back</button></a>
         </div><br>
     </div>
 </body>

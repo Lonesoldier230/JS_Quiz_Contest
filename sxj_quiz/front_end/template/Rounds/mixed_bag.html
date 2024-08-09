@@ -120,8 +120,8 @@
             }
 
             document.addEventListener('keydown', function (event) {
-                if (event.ctrlKey && event.altKey && event.key === 't') {
-                    console.log("Ctrl + Alt + T pressed");
+                if (event.key === 't') {
+                    console.log("T pressed");
                     if (timerRunning) {
                         stopTimer();
                     } else {
