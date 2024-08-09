@@ -38,9 +38,7 @@ body, html {
     padding: 20px;
     background-color: #42464f; /* Container background color */
     border-radius: 8px;
-    box-shadow: 30px 30px 10px rgba(22, 215, 8, 0.896);
-    max-width: 1000px;
-    width: 100%;
+    max-width: auto;
 }
 
 .button,
