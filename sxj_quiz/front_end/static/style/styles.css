@@ -41,7 +41,7 @@ body, html {
     padding: 20px;
     background-color: #42464f; /* Container background color */
     border-radius: 8px;
-    max-width: auto;
+    max-width: 60%;
 }
 
 /* Button Styling */
