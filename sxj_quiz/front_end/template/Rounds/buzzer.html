@@ -34,11 +34,12 @@
     </div>
     <div class="bottom-right-container">
         <h2><p id="timer">Time left: <span id="countdown">15</span> seconds</p></h2>
+        <button id="add_time">Add 5 seconds</button> <!-- Added button for adding time -->
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var revealButton = document.getElementById('reveal_answer');
-            var addTime = document.getElementById('time');
+            var addTimeButton = document.getElementById('add_time');
             var answer = document.getElementById('answer');
             var countdownElement = document.getElementById('countdown');
             var nextQuestionButton = document.getElementById('next_question');
@@ -53,15 +54,30 @@
                     timeLeft--;
                     countdownElement.textContent = timeLeft;
                     localStorage.setItem("remainingTime", timeLeft);
+                } else {
+                    stopTimer(); // Stop the timer when time runs out
+                    console.log("Time's up!");
+                }
+            }
+
+            function startTimer() {
+                if (timer === null) {
+                    timer = setInterval(updateCountdown, 1000);
+                }
+            }
+
+            function stopTimer() {
+                if (timer !== null) {
+                    clearInterval(timer);
+                    timer = null;
                 }
             }
 
             function toggleTimer() {
                 if (timer === null) {
-                    timer = setInterval(updateCountdown, 1000);
+                    startTimer();
                 } else {
-                    clearInterval(timer);
-                    timer = null;
+                    stopTimer();
                 }
             }
 
@@ -79,23 +95,25 @@
             });
 
             // Add time logic
-            addTime.addEventListener('click', function() {
+            addTimeButton.addEventListener('click', function() {
                 timeLeft += additionalTime;
                 countdownElement.textContent = timeLeft;
-                addTime.style.display = 'none';
+                addTimeButton.style.display = 'none'; // Hide button after adding time
                 localStorage.setItem('remainingTime', timeLeft);
                 if (timeLeft > 0 && timer === null) {
-                    toggleTimer(); // Start the timer if it's not running
+                    startTimer(); // Start the timer if it's not running
                 }
             });
 
             // Save remaining time when navigating to the next question
             nextQuestionButton.addEventListener('click', function() {
+                stopTimer();
                 localStorage.setItem('remainingTime', timeLeft);
             });
 
             // Clear remaining time when navigating back to rounds
             backToRoundsButton.addEventListener('click', function() {
+                stopTimer();
                 localStorage.removeItem('remainingTime');
             });
         });

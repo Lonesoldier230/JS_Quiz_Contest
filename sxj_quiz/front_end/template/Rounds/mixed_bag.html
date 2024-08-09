@@ -23,7 +23,7 @@
     </style>
 </head>
 
-<body class="body" style="background-image:url('{% static " images/quiz.png" %}')">
+<body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
     <div class="container">
         {% if file != None %}
         <img src="{{file}}" alt="Question Image" class="question-image">
@@ -31,8 +31,8 @@
         <p id="question" style="font-size: 45px; color: antiquewhite;">{{ question }}</p>
         <button class="button-hideAfterClick" id="reveal_answer">Reveal Answer</button>
         <p id="answer" class="hidden" style="font-size: 30px; color: antiquewhite;">{{ answer }}</p>
-        {% if iter < limit %} <a href="{% url 'round:mix' subject=subject iter=iter|add:'1' %}" class="button"
-            id="next_question">Next Question</a>
+        {% if iter < limit %} 
+        <a href="{% url 'round:mix' subject=subject iter=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
         {% endif %}
         <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
     </div>
@@ -47,33 +47,71 @@
             var nextQuestionButton = document.getElementById('next_question');
             var backToRoundsButton = document.getElementById('back_to_rounds');
 
-
-            timeLeft = 15;
-            // Initialize countdown timer
-            var timer = setInterval(updateCountdown, 1000);
+            var timeLeft = 15;
+            var timerRunning = false;  // Track if the timer is running
+            var timerInterval = null;  // Store the interval ID
 
             function updateCountdown() {
                 timeLeft--;
                 countdownElement.textContent = timeLeft;
                 if (timeLeft <= 0) {
-                    clearInterval(timer);
+                    stopTimer();  // Stop the timer when time runs out
+                    console.log("Time's up!");
                 }
                 localStorage.setItem("remainingTime", timeLeft);
             }
 
-            // Reveal answer logic
-            revealButton.addEventListener('click', function () {
-                answer.classList.remove('hidden');
-                revealButton.style.display = 'none'; // Hide button after answer is revealed
+            function startTimer() {
+                if (!timerRunning) {
+                    timerInterval = setInterval(updateCountdown, 1000);  // Update every second
+                    timerRunning = true;
+                    console.log("Timer started.");
+                }
+            }
+
+            function stopTimer() {
+                if (timerRunning) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    timerRunning = false;
+                    console.log("Timer stopped.");
+                }
+            }
+
+            // Listen for the Ctrl + Alt + T key combination
+            document.addEventListener('keydown', function (event) {
+                if (event.ctrlKey && event.altKey && event.key === 't') {
+                    console.log("Ctrl + Alt + T pressed");
+                    if (timerRunning) {
+                        stopTimer();
+                    } else {
+                        startTimer();
+                    }
+                }
             });
 
-            // Save remaining time when navigating to the next question
+            // Button click logic for rounds
+            document.querySelectorAll('.round-button').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    var selectedRound = this.getAttribute('data-round');
+                    this.textContent = `${selectedRound}`;
+                    this.disabled = true;
+
+                    setTimeout(function () {
+                        window.location.href = `{% url 'round:mix-main' %}${selectedRound}/1`;
+                    }, 5000);
+                });
+            });
+
+            // Stop the timer when navigating to the next question
             nextQuestionButton.addEventListener('click', function () {
+                stopTimer();
                 localStorage.setItem('remainingTime', timeLeft);
             });
 
-            // Clear remaining time when navigating back to rounds
+            // Clear remaining time and stop the timer when navigating back to rounds
             backToRoundsButton.addEventListener('click', function () {
+                stopTimer();
                 localStorage.removeItem('remainingTime');
             });
         });
