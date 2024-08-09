@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Page</title>
+    <link rel="stylesheet" href="{% static 'style/styles.css' %}">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            box-sizing: border-box; /* Ensure padding and border are included in width/height calculations */
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Align content to the top */
+            padding: 20px;
+            height: 100vh; /* Full viewport height */
+            box-sizing: border-box; /* Include padding in height calculation */
+            overflow-y: auto; /* Allow vertical scrolling if content overflows */
+            background-color: #42464f; /* Container background color */
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+        .column {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            padding: 10px;
+            box-sizing: border-box; /* Include padding in width calculation */
+        }
+        .button,
+        .back-button {
+            display: block;
+            width: 100%;  /* Full width of the column */
+            max-width: 180px;  /* Increased maximum width for better fit */
+            margin: 10px 0;  /* Adjusted margin for spacing */
+            padding: 15px;
+            font-size: 18px;  /* Adjusted font size for better visibility */
+            text-align: center;
+            cursor: pointer;
+            box-sizing: border-box; /* Include padding in width calculation */
+            background: linear-gradient(to right, #4dffaf, #357bbc); /* Gradient background */
+            color: #2f0c0b; /* Button text color */
+            border: none;
+            border-radius: 18px; /* Rounded corners */
+            transition: background-color 0.3s ease; /* Smooth color transition */
+        }
+        .button:hover,
+        .back-button:hover {
+            background-color: #4882cd; /* Hover effect color */
+        }
+        .back-button {
+            width: 80%;
+            max-width: 300px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body class="body" style="background-image:url('{% static "images/quiz.png" %}'); background-size: cover; background-position: center;">
+    <div class="container">
+        <h1>Questions</h1>
+        <!-- Two columns for questions -->
+        <div class="row">
+            <div class="column">
+                {% for i in one_s %}
+                <a href="{% url 'round:common' round='general_round' iter=i %}"><button class="button" id="question_{{ i }}">Question {{ i }}</button></a>
+                {% endfor %}
+            </div>
+            <div class="column">
+                {% for i in s_th %}
+                <a href="{% url 'round:common' round='general_round' iter=i %}"><button class="button" id="question_{{ i }}">Question {{ i }}</button></a>
+                {% endfor %}
+            </div>
+        </div>
+        <a href="{% url 'round:main' %}" class="button back-button">Back to Rounds</a>
+    </div>
+
+    <script>
+        // Function to handle button click and set cookie
+        function selectQuestion(questionNumber) {
+            document.cookie = 'question_' + questionNumber + '_answered=true; path=/';
+            // Hide the button after clicking
+            document.getElementById('question_' + questionNumber).style.display = 'none';
+            // Redirect to the question page
+        }
+
+        // Function to hide buttons based on cookies
+        function hideAnsweredButtons() {
+            var cookies = document.cookie.split('; ');
+            cookies.forEach(function(cookie) {
+                var parts = cookie.split('=');
+                if (parts[0].startsWith('question_') && parts[1] === 'true') {
+                    var questionNumber = parts[0].split('_')[1];
+                    var button = document.getElementById('question_' + questionNumber);
+                    if (button) {
+                        button.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        // Call hideAnsweredButtons on page load
+        window.onload = hideAnsweredButtons;
+    </script>
+</body>
+</html>

@@ -114,3 +114,12 @@ def recall(request, pk):
     
     request.session["recall"] = int(pk)
     return render(request,"Rounds/recall.html",context=ctxt)
+
+def g_main(request):
+    a = range(1,16)
+    b = range(16,31)
+    ctxt = {
+        "one_s":a,
+        "s_th":b
+    }
+    return render(request,"Rounds/general_round_ques_select.html", context=ctxt)

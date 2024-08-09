@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import Main, common, mix_bag, m_choice, mix_main, recall
+from .views import Main, common, mix_bag, m_choice, mix_main, recall, g_main
 
 app_name = "round"
 
@@ -9,5 +9,6 @@ urlpatterns = [
     path('MixedBag/',mix_main, name="mix-main"),
     path('MixedBag/<str:subject>/<int:iter>', mix_bag, name = "mix"),
     path('Multiple/<int:pk>', m_choice, name="multiple"),
-    path('Recall/<int:pk>', recall, name="recall")
+    path('Recall/<int:pk>', recall, name="recall"),
+    path('general_round/', g_main, name = "general")
 ]

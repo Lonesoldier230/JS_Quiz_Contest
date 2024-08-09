@@ -7,15 +7,73 @@
     <title>Quiz Page</title>
     <link rel="stylesheet" href="{% static 'style/styles.css' %}">
     <style>
-        /* Additional styling for answer reveal */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            box-sizing: border-box; /* Ensure padding and border are included in width/height calculations */
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Align content to the top */
+            padding: 20px;
+            height: 100vh; /* Full viewport height */
+            box-sizing: border-box; /* Include padding in height calculation */
+            overflow-y: auto; /* Allow vertical scrolling if content overflows */
+            background-color: #42464f; /* Container background color */
+        }
         .hidden {
             display: none;
         }
         .question-image {
-            max-width: 100%; /* Adjust as needed */
+            max-width: 100%;
             height: auto;
             display: block;
             margin: 0 auto;
+        }
+        .button-hideAfterClick,
+        .button-pass {
+            display: block;
+            width: 100%;  /* Full width of the column */
+            max-width: 180px;  /* Increased maximum width for better fit */
+            margin: 10px 0;  /* Adjusted margin for spacing */
+            padding: 15px;
+            font-size: 18px;  /* Adjusted font size for better visibility */
+            text-align: center;
+            cursor: pointer;
+            box-sizing: border-box; /* Include padding in width calculation */
+            background: linear-gradient(to right, #4dffaf, #357bbc); /* Gradient background */
+            color: #2f0c0b; /* Button text color */
+            border: none;
+            border-radius: 18px; /* Rounded corners */
+            transition: background-color 0.3s ease; /* Smooth color transition */
+        }
+        .button-hideAfterClick:hover,
+        .button-pass:hover {
+            background-color: #4882cd; /* Hover effect color */
+        }
+        .bottom-right-container {
+            display: grid;
+            place-items: center;
+            position: absolute;
+            bottom: 0;
+            right: 0; /* Adjust the right value based on your needs */
+            padding: 20px;
+            background-color: #000000;
+            border-radius: 8px;
+            color: beige;
+            box-shadow: 30px 30px 10px rgba(22, 215, 8, 0.896);
+        }
+        h2 {
+            margin: 0; /* Remove default margin */
+            font-size: 24px; /* Adjust font size as needed */
+        }
+        p {
+            font-size: 30px;
+            color: antiquewhite;
         }
     </style>
 </head>
@@ -24,14 +82,14 @@
         {% if file != None %}
             <img src="{{file}}" alt="Question Image" class="question-image">
         {% endif %}
-        <p id="question" style="font-size: 45px; color: antiquewhite;">{{ question }}</p>
+        <p id="question">{{ question }}</p>
         <button class="button-hideAfterClick" id="reveal_answer">Reveal Answer</button>
         <button class="button-pass" id="time">Pass Question</button>
-        <p id="answer" class="hidden" style="font-size: 30px; color: antiquewhite;">{{ answer }}</p>
+        <p id="answer" class="hidden">{{ answer }}</p>
         {% if iter < limit %}
-            <a href="{% url 'round:common' round='general_round' iter=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
+            <a href="{% url 'round:common' round='general_round' iter=iter|add:'1' %}" class="button button-hideAfterClick" id="next_question">Next Question</a>
         {% endif %}
-        <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
+        <a href="{% url 'round:main' %}" class="button button-hideAfterClick" id="back_to_rounds">Back to Rounds</a>
     </div>
     <div class="bottom-right-container">
         <h2><p id="timer">Time left: <span id="countdown">15</span> seconds</p></h2>
@@ -49,7 +107,7 @@
 
             var timeLeft = 15;
             var additionalTime = 5;
-            var timer = setInterval(updateCountdown, 1000);
+            var timer = null;
 
             function updateCountdown() {
                 if (timeLeft > 0) {
@@ -58,9 +116,34 @@
                     localStorage.setItem("remainingTime", timeLeft);
                 } else {
                     clearInterval(timer);
+                    timer = null;
                     buzzer.play(); // Play buzzer sound when time is over
                 }
             }
+
+            function startTimer() {
+                if (!timer) {
+                    timer = setInterval(updateCountdown, 1000);
+                }
+            }
+
+            function stopTimer() {
+                if (timer) {
+                    clearInterval(timer);
+                    timer = null;
+                }
+            }
+
+            // Start and stop the timer with Ctrl + Alt + T
+            document.addEventListener('keydown', function(event) {
+                if (event.ctrlKey && event.altKey && event.key === 't') {
+                    if (timer) {
+                        stopTimer();
+                    } else {
+                        startTimer();
+                    }
+                }
+            });
 
             // Reveal answer logic
             revealButton.addEventListener('click', function() {
@@ -75,6 +158,7 @@
                 timeLeft += additionalTime;
                 countdownElement.textContent = timeLeft;
                 localStorage.setItem('remainingTime', timeLeft);
+                startTimer(); // Restart the timer if it's not running
             });
 
             // Save remaining time when navigating to the next question
