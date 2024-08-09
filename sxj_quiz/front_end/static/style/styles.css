@@ -1,3 +1,4 @@
+/* General styles for the body and HTML */
 body, html {
     margin: 0;
     padding: 0;
@@ -5,6 +6,7 @@ body, html {
     width: 100%;
 }
 
+/* Styling for the background and layout */
 .bg.home {
     font-family: Arial, sans-serif;
     background-image: url("img.png");
@@ -32,6 +34,7 @@ body, html {
     height: 100vh;
 }
 
+/* Container styling for quiz content */
 .container {
     display: grid;
     place-items: center;
@@ -41,11 +44,10 @@ body, html {
     max-width: auto;
 }
 
-.button,
-.button-hideAfterClick,
-.button-left,
-.button-right,
-.button-pass {
+/* Button Styling */
+
+/* Base button styling */
+.button {
     display: inline-block;
     width: 450px; /* Button width */
     padding: 10px 20px;
@@ -60,27 +62,96 @@ body, html {
     transition: background-color 0.3s ease;
 }
 
-.button-hideAfterClick:active {
-    display: none;
+/* Hover effect for base button */
+.button:hover {
+    background-color: #4882cd; /* Hover effect color */
 }
 
+/* Styling for the 'Reveal Answer' button */
+.button-hideAfterClick {
+    display: inline-block;
+    width: 450px;
+    padding: 10px 20px;
+    background: linear-gradient(to right, #4dffaf, #357bbc); /* Gradient background */
+    color: #2f0c0b;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 18px;
+    transition: background-color 0.3s ease;
+}
+
+.button-hideAfterClick:hover {
+    background-color: #4882cd; /* Hover effect color */
+}
+
+/* Styling for the left button */
 .button-left {
+    display: inline-block;
+    width: 70%; /* Width for left button */
+    padding: 10px 20px;
+    background: linear-gradient(to right, #357bbc, #4dffaf); /* Gradient background from blue to green */
+    color: #2f0c0b;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 18px;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+    transition: background-color 0.3s ease;
 }
 
+.button-left:hover {
+    background-color: #4882cd; /* Hover effect color */
+}
+
+/* Styling for the right button */
 .button-right {
+    display: inline-block;
+    width: 30%; /* Width for right button */
+    padding: 10px 20px;
+    background: linear-gradient(to right, #4dffaf, #357bbc); /* Gradient background from green to blue */
+    color: #2f0c0b;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 18px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+    transition: background-color 0.3s ease;
 }
 
-.button:hover,
-.button-left:hover,
-.button-right:hover,
+.button-right:hover {
+    background-color: #4882cd; /* Hover effect color */
+}
+
+/* Styling for the pass button */
+.button-pass {
+    display: inline-block;
+    width: 450px;
+    padding: 10px 20px;
+    background: linear-gradient(to right, #4dffaf, #357bbc); /* Gradient background */
+    color: #2f0c0b;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 18px;
+    transition: background-color 0.3s ease;
+}
+
 .button-pass:hover {
     background-color: #4882cd; /* Hover effect color */
 }
 
+/* Bottom container for timer */
 .bottom-right-container {
     display: grid;
     place-items: center;
@@ -94,6 +165,7 @@ body, html {
     box-shadow: 30px 30px 10px rgba(22, 215, 8, 0.896);
 }
 
+/* Group button styling */
 .btn-group button {
     display: inline;
     height: 75px;
@@ -110,4 +182,9 @@ body, html {
 
 .btn-group button:not(:last-child) {
     border-right: none; /* Prevent double borders */
+}
+
+/* Hidden class for hiding elements */
+.hidden {
+    display: none;
 }

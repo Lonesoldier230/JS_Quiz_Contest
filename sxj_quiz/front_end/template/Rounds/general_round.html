@@ -6,129 +6,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Page</title>
     <link rel="stylesheet" href="{% static 'style/styles.css' %}">
-    <style>
-        .hidden {
-            display: none;
-        }
-        .question-image {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 0 auto;
-        }
-        .button-hideAfterClick,
-        .button-pass {
-            display: block;
-            width: 100%;
-            max-width: 180px;
-            margin: 10px 0;
-            padding: 15px;
-            font-size: 18px;
-            text-align: center;
-            cursor: pointer;
-            box-sizing: border-box;
-            background: linear-gradient(to right, #4dffaf, #357bbc);
-            color: #2f0c0b;
-            border: none;
-            border-radius: 18px;
-            transition: background-color 0.3s ease;
-        }
-        .button-hideAfterClick:hover,
-        .button-pass:hover {
-            background-color: #4882cd;
-        }
-    </style>
 </head>
 <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
     <div class="container">
-        {% if file %}
-            <img src="{{ file }}" alt="Question Image" class="question-image">
+        {% if file != None %}
+            <img src="{{file}}" alt="Question Image" class="question-image">
         {% endif %}
         <p id="question" style="font-size: 45px; color: antiquewhite;">{{ question }}</p>
+
+        <!-- Button to reveal the answer -->
         <button class="button-hideAfterClick" id="reveal_answer">Reveal Answer</button>
-        <button class="button-pass" id="time">Pass Question</button>
+         
+        
         <p id="answer" class="hidden" style="font-size: 30px; color: antiquewhite;">{{ answer }}</p>
-        {% if iter < limit %}
-            <a href="{% url 'round:common' round='general_round' iter=iter|add:'1' %}" class="button button-hideAfterClick" id="next_question">Next Question</a>
-        {% endif %}
-        <a href="{% url 'round:main' %}" class="button button-hideAfterClick" id="back_to_rounds">Back to Rounds</a>
+        
+        
+        <!-- Button to pass the question and add time -->
+        <button class="button-pass" id="time">Pass Question</button>
+
+        <!-- The answer text, hidden by default -->
+       
+
+
+        <!-- Button to navigate back to the rounds menu -->
+        <a href="{% url 'round:general' %}" class="button" id="back_to_question">Back to Questions</a>
     </div>
+
+    <!-- Timer display -->
     <div class="bottom-right-container">
-        <h2>Time left: <span id="countdown">15</span> seconds</h2>
+        <p id="timer">Time left: <span id="countdown">15</span> seconds</p>
     </div>
-    <audio id="buzzer" src="{% static 'sounds/buzzer.mp3' %}" preload="auto"></audio>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var revealButton = document.getElementById('reveal_answer');
-            var passQuestionButton = document.getElementById('time');
+            var addTimeButton = document.getElementById('time');
             var answer = document.getElementById('answer');
             var countdownElement = document.getElementById('countdown');
             var nextQuestionButton = document.getElementById('next_question');
-            var backToRoundsButton = document.getElementById('back_to_rounds');
-            var buzzer = document.getElementById('buzzer');
+            var backToRoundsButton = document.getElementById('back_to_question');
 
             var timeLeft = 15;
             var additionalTime = 5;
-            var timer = null;
+            var timer = setInterval(updateCountdown, 1000);
 
             function updateCountdown() {
                 if (timeLeft > 0) {
                     timeLeft--;
                     countdownElement.textContent = timeLeft;
                     localStorage.setItem("remainingTime", timeLeft);
-                } else {
-                    clearInterval(timer);
-                    timer = null;
-                    buzzer.play();
                 }
             }
 
-            function startTimer() {
-                if (!timer) {
-                    timer = setInterval(updateCountdown, 1000);
-                }
-            }
-
-            function stopTimer() {
-                if (timer) {
-                    clearInterval(timer);
-                    timer = null;
-                }
-            }
-
-            document.addEventListener('keydown', function(event) {
-                if (event.ctrlKey && event.altKey && event.key === 't') {
-                    if (timer) {
-                        stopTimer();
-                    } else {
-                        startTimer();
-                    }
-                }
-            });
-
+            // Reveal answer logic
             revealButton.addEventListener('click', function() {
                 answer.classList.remove('hidden');
-                revealButton.classList.add('hidden');
-                passQuestionButton.classList.add('hidden');
+                answer.style.display = 'block'; // Ensure the answer is displayed
+                revealButton.style.display = 'none';// Hide button after answer is revealed
+                
             });
 
-            passQuestionButton.addEventListener('click', function() {
+            // Add time logic
+            addTimeButton.addEventListener('click', function() {
                 timeLeft += additionalTime;
                 countdownElement.textContent = timeLeft;
                 localStorage.setItem('remainingTime', timeLeft);
-                startTimer(); // Restart the timer if it's not running
+                if (timeLeft > 0 && timer === null) {
+                    timer = setInterval(updateCountdown, 1000);
+                }
             });
 
-            nextQuestionButton.addEventListener('click', function() {
-                localStorage.setItem('remainingTime', timeLeft);
-            });
+            // Save remaining time when navigating to the next question
+            if (nextQuestionButton) {
+                nextQuestionButton.addEventListener('click', function() {
+                    localStorage.setItem('remainingTime', timeLeft);
+                });
+            }
 
+            // Clear remaining time when navigating back to rounds
             backToRoundsButton.addEventListener('click', function() {
                 localStorage.removeItem('remainingTime');
             });
-
-            // Start countdown timer immediately
-            startTimer();
         });
     </script>
 </body>

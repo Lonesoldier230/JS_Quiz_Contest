@@ -73,12 +73,16 @@
         <div class="row">
             <div class="column">
                 {% for i in one_s %}
-                <a href="{% url 'round:common' round='general_round' iter=i %}"><button class="button" id="question_{{ i }}">Question {{ i }}</button></a>
+                <a href="{% url 'round:common' round='general_round' iter=i %}">
+                    <button class="button" id="question_{{ i }}" onclick="selectQuestion({{ i }})">Question {{ i }}</button>
+                </a>
                 {% endfor %}
             </div>
             <div class="column">
                 {% for i in s_th %}
-                <a href="{% url 'round:common' round='general_round' iter=i %}"><button class="button" id="question_{{ i }}">Question {{ i }}</button></a>
+                <a href="{% url 'round:common' round='general_round' iter=i %}">
+                    <button class="button" id="question_{{ i }}" onclick="selectQuestion({{ i }})">Question {{ i }}</button>
+                </a>
                 {% endfor %}
             </div>
         </div>
@@ -91,7 +95,6 @@
             document.cookie = 'question_' + questionNumber + '_answered=true; path=/';
             // Hide the button after clicking
             document.getElementById('question_' + questionNumber).style.display = 'none';
-            // Redirect to the question page
         }
 
         // Function to hide buttons based on cookies
