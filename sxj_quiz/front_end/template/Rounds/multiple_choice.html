@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,7 +34,7 @@
             transition: all 0.3s ease;
             box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
             font-family: 'Orbitron', sans-serif;
-            margin: 0; /* No additional margin needed */
+            margin: 0;
         }
         .option:hover {
             background: linear-gradient(45deg, #0093E9, #80D0C7);
@@ -46,15 +47,37 @@
         .incorrect {
             background: #dc3545;
         }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 18px;
+            color: white;
+            background: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .bottom-right-container {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
     </style>
 </head>
+
 <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
     <div class="container">
         {% if question_type == 'image' and file %}
-            <img src="{{file}}" alt="Question Image" class="question-image">
+            <img src="{{ file }}" alt="Question Image" class="question-image">
         {% elif question_type == 'audio' and file %}
             <audio controls class="question-audio">
-                <source src="{{file}}" type="audio/mpeg">
+                <source src="{{ file }}" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
         {% else %}
@@ -63,8 +86,8 @@
         
         <div class="options-grid">
             {% for option in choices %}
-                <div class="option" data-option="{{option}}">
-                    <strong>{{ forloop.counter}}.</strong> {{option}}
+                <div class="option" data-option="{{ option }}">
+                    <strong>{{ forloop.counter }}.</strong> {{ option }}
                 </div>
             {% empty %}
                 <p>No options available</p>
@@ -90,16 +113,15 @@
 
             var correctAnswer = "{{ answer }}";
             var timeLeft = 15;
-            var timer = setInterval(updateCountdown, 1000);
+            var timerInterval = setInterval(updateCountdown, 1000);
 
             function updateCountdown() {
-                if (timeLeft > 0) {
-                    timeLeft--;
-                    countdownElement.textContent = timeLeft;
-                    localStorage.setItem("remainingTime", timeLeft);
-                } else {
-                    clearInterval(timer);
+                timeLeft--;
+                countdownElement.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
                 }
+                localStorage.setItem("remainingTime", timeLeft);
             }
 
             options.forEach(function(option) {
@@ -118,12 +140,10 @@
                 });
             });
 
-            // Save remaining time when navigating to the next question
             nextQuestionButton.addEventListener('click', function() {
                 localStorage.setItem('remainingTime', timeLeft);
             });
 
-            // Clear remaining time when navigating back to rounds
             backToRoundsButton.addEventListener('click', function() {
                 localStorage.removeItem('remainingTime');
             });

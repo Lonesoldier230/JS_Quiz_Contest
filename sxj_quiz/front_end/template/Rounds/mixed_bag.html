@@ -8,31 +8,72 @@
     <title>Quiz Page</title>
     <link rel="stylesheet" href="{% static 'style/styles.css' %}">
     <style>
-        /* Additional styling for answer reveal */
-        .hidden {
-            display: none;
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            box-sizing: border-box;
         }
-
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            height: 100vh;
+            box-sizing: border-box;
+            background-color: #42464f;
+        }
+        h1, h2, p {
+            color: antiquewhite;
+        }
         .question-image {
             max-width: 100%;
-            /* Adjust as needed */
             height: auto;
             display: block;
             margin: 0 auto;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            max-width: 180px;
+            margin: 10px 0;
+            padding: 15px;
+            font-size: 18px;
+            text-align: center;
+            cursor: pointer;
+            box-sizing: border-box;
+            background: linear-gradient(to right, #4dffaf, #357bbc);
+            color: #2f0c0b;
+            border: none;
+            border-radius: 18px;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #4882cd;
+        }
+        .hidden {
+            display: none;
+        }
+        .bottom-right-container {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
         }
     </style>
 </head>
 
 <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
     <div class="container">
-        {% if file != None %}
-        <img src="{{file}}" alt="Question Image" class="question-image">
+        {% if file %}
+            <img src="{{ file }}" alt="Question Image" class="question-image">
         {% endif %}
-        <p id="question" style="font-size: 45px; color: antiquewhite;">{{ question }}</p>
-        <button class="button-hideAfterClick" id="reveal_answer">Reveal Answer</button>
-        <p id="answer" class="hidden" style="font-size: 30px; color: antiquewhite;">{{ answer }}</p>
+        <p id="question" style="font-size: 45px;">{{ question }}</p>
+        <button class="button" id="reveal_answer">Reveal Answer</button>
+        <p id="answer" class="hidden" style="font-size: 30px;">{{ answer }}</p>
         {% if iter < limit %} 
-        <a href="{% url 'round:mix' subject=subject iter=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
+            <a href="{% url 'round:mix' subject=subject iter=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
         {% endif %}
         <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
     </div>
@@ -48,14 +89,14 @@
             var backToRoundsButton = document.getElementById('back_to_rounds');
 
             var timeLeft = 15;
-            var timerRunning = false;  // Track if the timer is running
-            var timerInterval = null;  // Store the interval ID
+            var timerRunning = false;
+            var timerInterval = null;
 
             function updateCountdown() {
                 timeLeft--;
                 countdownElement.textContent = timeLeft;
                 if (timeLeft <= 0) {
-                    stopTimer();  // Stop the timer when time runs out
+                    stopTimer();
                     console.log("Time's up!");
                 }
                 localStorage.setItem("remainingTime", timeLeft);
@@ -63,7 +104,7 @@
 
             function startTimer() {
                 if (!timerRunning) {
-                    timerInterval = setInterval(updateCountdown, 1000);  // Update every second
+                    timerInterval = setInterval(updateCountdown, 1000);
                     timerRunning = true;
                     console.log("Timer started.");
                 }
@@ -78,7 +119,6 @@
                 }
             }
 
-            // Listen for the Ctrl + Alt + T key combination
             document.addEventListener('keydown', function (event) {
                 if (event.ctrlKey && event.altKey && event.key === 't') {
                     console.log("Ctrl + Alt + T pressed");
@@ -90,29 +130,19 @@
                 }
             });
 
-            // Button click logic for rounds
-            document.querySelectorAll('.round-button').forEach(function (button) {
-                button.addEventListener('click', function () {
-                    var selectedRound = this.getAttribute('data-round');
-                    this.textContent = `${selectedRound}`;
-                    this.disabled = true;
-
-                    setTimeout(function () {
-                        window.location.href = `{% url 'round:mix-main' %}${selectedRound}/1`;
-                    }, 5000);
-                });
-            });
-
-            // Stop the timer when navigating to the next question
             nextQuestionButton.addEventListener('click', function () {
                 stopTimer();
                 localStorage.setItem('remainingTime', timeLeft);
             });
 
-            // Clear remaining time and stop the timer when navigating back to rounds
             backToRoundsButton.addEventListener('click', function () {
                 stopTimer();
                 localStorage.removeItem('remainingTime');
+            });
+
+            revealButton.addEventListener('click', function () {
+                answer.classList.remove('hidden');
+                revealButton.style.display = 'none';
             });
         });
     </script>

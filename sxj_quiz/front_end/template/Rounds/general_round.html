@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-{% load static %}
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Page</title>
@@ -12,18 +12,18 @@
             padding: 0;
             height: 100%;
             width: 100%;
-            box-sizing: border-box; /* Ensure padding and border are included in width/height calculations */
+            box-sizing: border-box;
         }
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* Align content to the top */
+            justify-content: flex-start;
             padding: 20px;
-            height: 100vh; /* Full viewport height */
-            box-sizing: border-box; /* Include padding in height calculation */
-            overflow-y: auto; /* Allow vertical scrolling if content overflows */
-            background-color: #42464f; /* Container background color */
+            height: 100vh;
+            box-sizing: border-box;
+            overflow-y: auto;
+            background-color: #42464f;
         }
         .hidden {
             display: none;
@@ -37,30 +37,30 @@
         .button-hideAfterClick,
         .button-pass {
             display: block;
-            width: 100%;  /* Full width of the column */
-            max-width: 180px;  /* Increased maximum width for better fit */
-            margin: 10px 0;  /* Adjusted margin for spacing */
+            width: 100%;
+            max-width: 180px;
+            margin: 10px 0;
             padding: 15px;
-            font-size: 18px;  /* Adjusted font size for better visibility */
+            font-size: 18px;
             text-align: center;
             cursor: pointer;
-            box-sizing: border-box; /* Include padding in width calculation */
-            background: linear-gradient(to right, #4dffaf, #357bbc); /* Gradient background */
-            color: #2f0c0b; /* Button text color */
+            box-sizing: border-box;
+            background: linear-gradient(to right, #4dffaf, #357bbc);
+            color: #2f0c0b;
             border: none;
-            border-radius: 18px; /* Rounded corners */
-            transition: background-color 0.3s ease; /* Smooth color transition */
+            border-radius: 18px;
+            transition: background-color 0.3s ease;
         }
         .button-hideAfterClick:hover,
         .button-pass:hover {
-            background-color: #4882cd; /* Hover effect color */
+            background-color: #4882cd;
         }
         .bottom-right-container {
             display: grid;
             place-items: center;
             position: absolute;
             bottom: 0;
-            right: 0; /* Adjust the right value based on your needs */
+            right: 0;
             padding: 20px;
             background-color: #000000;
             border-radius: 8px;
@@ -68,8 +68,8 @@
             box-shadow: 30px 30px 10px rgba(22, 215, 8, 0.896);
         }
         h2 {
-            margin: 0; /* Remove default margin */
-            font-size: 24px; /* Adjust font size as needed */
+            margin: 0;
+            font-size: 24px;
         }
         p {
             font-size: 30px;
@@ -79,8 +79,8 @@
 </head>
 <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
     <div class="container">
-        {% if file != None %}
-            <img src="{{file}}" alt="Question Image" class="question-image">
+        {% if file %}
+            <img src="{{ file }}" alt="Question Image" class="question-image">
         {% endif %}
         <p id="question">{{ question }}</p>
         <button class="button-hideAfterClick" id="reveal_answer">Reveal Answer</button>
@@ -92,7 +92,7 @@
         <a href="{% url 'round:main' %}" class="button button-hideAfterClick" id="back_to_rounds">Back to Rounds</a>
     </div>
     <div class="bottom-right-container">
-        <h2><p id="timer">Time left: <span id="countdown">15</span> seconds</p></h2>
+        <h2>Time left: <span id="countdown">15</span> seconds</h2>
     </div>
     <audio id="buzzer" src="{% static 'sounds/buzzer.mp3' %}" preload="auto"></audio>
     <script>
@@ -117,7 +117,7 @@
                 } else {
                     clearInterval(timer);
                     timer = null;
-                    buzzer.play(); // Play buzzer sound when time is over
+                    buzzer.play();
                 }
             }
 
@@ -134,7 +134,6 @@
                 }
             }
 
-            // Start and stop the timer with Ctrl + Alt + T
             document.addEventListener('keydown', function(event) {
                 if (event.ctrlKey && event.altKey && event.key === 't') {
                     if (timer) {
@@ -145,31 +144,29 @@
                 }
             });
 
-            // Reveal answer logic
             revealButton.addEventListener('click', function() {
                 answer.classList.remove('hidden');
-                revealButton.style.display = 'none'; // Hide button after answer is revealed
-                addTimeButton.disabled = true; // Disable the pass question button
-                addTimeButton.style.display = 'none';
+                revealButton.classList.add('hidden');
+                addTimeButton.classList.add('hidden');
             });
 
-            // Add time logic
             addTimeButton.addEventListener('click', function() {
                 timeLeft += additionalTime;
                 countdownElement.textContent = timeLeft;
                 localStorage.setItem('remainingTime', timeLeft);
-                startTimer(); // Restart the timer if it's not running
+                startTimer();
             });
 
-            // Save remaining time when navigating to the next question
             nextQuestionButton.addEventListener('click', function() {
                 localStorage.setItem('remainingTime', timeLeft);
             });
 
-            // Clear remaining time when navigating back to rounds
             backToRoundsButton.addEventListener('click', function() {
                 localStorage.removeItem('remainingTime');
             });
+
+            // Start countdown timer immediately
+            startTimer();
         });
     </script>
 </body>

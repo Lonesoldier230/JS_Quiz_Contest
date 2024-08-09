@@ -6,11 +6,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Page</title>
     <link rel="stylesheet" href="{% static 'style/styles.css' %}">
-    
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            text-align: center;
+            margin-top: 50px;
+        }
+        #question {
+            font-size: 45px;
+            color: antiquewhite;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 20px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .body {
+            background-image: url('{% static "images/quiz.png" %}');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
 </head>
-<body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
+<body class="body">
     <div class="container">
-        <p id="question" style="font-size: 45px; color: antiquewhite;">Questions are Finished for this round</p>
+        <p id="question">Questions are Finished for this round</p>
         <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
     </div>
     <script>

@@ -1,92 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
-    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Page</title>
     <link rel="stylesheet" href="{% static 'style/styles.css' %}">
     <style>
+        body {
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            text-align: center;
+            margin-top: 50px;
+        }
+        #question {
+            font-size: 45px;
+            color: antiquewhite;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 20px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        #answer {
+            font-size: 30px;
+            color: antiquewhite;
+        }
         .hidden {
             display: none;
-                
-                width: 450px;
-                padding: 10px 20px;
-                align-items: center;
-                background-color: #000546;
-                color: white;
-                text-decoration: none;
-                font-size: 16px;
-                margin: 10px;
-                border: none;
-                cursor: pointer;
-                transition: background-color 0.3s ease;
         }
-        .visible {
-            display: block;
+        .bottom-right-container {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+        }
+        .bottom-right-container h2 {
+            margin: 0;
+            font-size: 20px;
+            color: antiquewhite;
+        }
+        audio {
+            margin: 20px 0;
         }
     </style>
+    <script>
+        function startTimer(duration, display) {
+            var timer = duration, minutes, seconds;
+            var interval = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    display.textContent = "00:00";
+                    alert('Time is up!');
+                }
+
+                localStorage.setItem("quizTime", timer);
+            }, 1000);
+
+            // Clear timer from localStorage when leaving the page
+            window.addEventListener('beforeunload', function() {
+                if (window.location.href.includes('back_to_rounds')) {
+                    localStorage.removeItem('quizTime');
+                }
+            });
+
+            // Save remaining time to localStorage when navigating to the next question
+            document.getElementById('next_question').addEventListener('click', function () {
+                localStorage.setItem('quizTime', timer);
+            });
+
+            // Clear remaining time from localStorage when navigating back to rounds
+            document.getElementById('back_to_rounds').addEventListener('click', function () {
+                localStorage.removeItem('quizTime');
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var storedTime = localStorage.getItem("quizTime");
+            var timeLeft = storedTime ? parseInt(storedTime) : 35; // Default to 35 seconds if no stored time
+            var display = document.querySelector('#time');
+            startTimer(timeLeft, display);
+
+            var revealButton = document.getElementById('reveal_answer');
+            var answer = document.getElementById('answer');
+            var countdownElement = document.getElementById('countdown');
+
+            var revealTimeLeft = 15;  // Adjust timer duration for reveal as needed
+            var revealTimer = setInterval(function () {
+                revealTimeLeft--;
+                countdownElement.textContent = revealTimeLeft;
+                if (revealTimeLeft <= 0) {
+                    clearInterval(revealTimer);
+                }
+            }, 1000);
+
+            revealButton.addEventListener('click', function () {
+                answer.classList.remove('hidden');
+                revealButton.style.display = 'none'; // Hide button after answer is revealed
+            });
+        });
+    </script>
 </head>
 <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
     <div class="container">
-        <div id="word-container" style="font-size: 45px; color:antiquewhite;"></div>
-        <button class="hidden" id="reveal_button">Reveal All Words</button>
-        <div id="answers-container" class="hidden" style="font-size: 30px; color:antiquewhite;"></div>
-        <a id="next_question" href="{% url 'round:recall' pk=iter|add:'1' %}" class="button">Next
-            Question</a>
-        <a href="{% url "round:main" %}" class="button hidden" id="back_button">Back to Rounds</a>
+        <p id="question">{{ question }}</p>
+
+        {% if file %}
+            {% if question_type == 'image' %}
+                <img src="{{ file }}" alt="Question Image" style="max-width: 100%; height: auto;">
+            {% elif question_type == 'audio' %}
+                <audio controls>
+                    <source src="{{ file }}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            {% endif %}
+        {% endif %}
+
+        <p id="answer" class="hidden">{{ answer }}</p>
+        <form id="quiz_form" method="POST">
+            {% csrf_token %}
+            {% for question in questions %}
+                <div>
+                    <p>{{ question.question_text }}</p>
+                    <input type="text" name="question_{{ forloop.counter0 }}">
+                    {% if file != None %}
+                        <img src="{{file}}" alt="Question Image" style="max-width: 100%; height: auto;">
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </form>
+        {% if iter < limit %}
+        <a id="next_question" href="{% url 'round:common' round='rapid_fire' iter=iter|add:'1' %}" class="button">Next Question</a>
+        {% endif %}
+        <a id="back_to_rounds" href="{% url 'round:main' %}" class="button">Back to Rounds</a>
     </div>
     <div class="bottom-right-container">
-        <h2><p id="timer">Time left: <span id="countdown">10</span> seconds</p></h2>
+        <h2><p id="timer">Time left: <span id="time">00:35</span></p></h2>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var words = {{ words|safe }};
-            var wordContainer = document.getElementById('word-container');
-            var countdownElement = document.getElementById('countdown');
-            var revealButton = document.getElementById('reveal_button');
-            var answersContainer = document.getElementById('answers-container');
-            var backButton = document.getElementById('back_button');
-            var bottomRightContainer = document.querySelector('.bottom-right-container');
-
-            var currentWordIndex = 0;
-            var timeLeft = 10;
-            var timer = setInterval(updateCountdown, 1000);
-
-            function showNextWord() {
-                if (currentWordIndex < words.length) {
-                    wordContainer.textContent = words[currentWordIndex];
-                    currentWordIndex++;
-                    timeLeft = 10;
-                } else {
-                    clearInterval(timer);
-                    revealButton.classList.remove('hidden');
-                    wordContainer.classList.add('hidden');
-                    bottomRightContainer.classList.add('hidden');
-                }
-            }
-
-            function updateCountdown() {
-                timeLeft--;
-                countdownElement.textContent = timeLeft;
-                if (timeLeft <= 0) {
-                    showNextWord();
-                }
-            }
-
-            revealButton.addEventListener('click', function() {
-                var html = '';
-                for (var i = 0; i < words.length; i++) {
-                    html += '<p>' + words[i];
-                }
-                answersContainer.innerHTML = html;
-                answersContainer.classList.remove('hidden');
-                revealButton.classList.add('hidden');
-                backButton.classList.remove('hidden');
-            });
-
-            showNextWord();  // Show the first word immediately
-        });
-    </script>
 </body>
 </html>
