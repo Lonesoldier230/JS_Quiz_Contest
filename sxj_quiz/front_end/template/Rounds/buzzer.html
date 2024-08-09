@@ -34,7 +34,6 @@
     </div>
     <div class="bottom-right-container">
         <h2><p id="timer">Time left: <span id="countdown">15</span> seconds</p></h2>
-        <button id="add_time">Add 5 seconds</button> <!-- Added button for adding time -->
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -83,7 +82,7 @@
 
             // Key combination logic for starting/stopping the timer
             document.addEventListener('keydown', function(event) {
-                if (event.ctrlKey && event.altKey && event.key === 't') {
+                if (event.key === 't') {
                     toggleTimer();
                 }
             });
