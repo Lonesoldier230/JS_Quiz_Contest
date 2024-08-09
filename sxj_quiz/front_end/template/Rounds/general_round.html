@@ -1,30 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
-    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Page</title>
     <link rel="stylesheet" href="{% static 'style/styles.css' %}">
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center; /* Center content vertically */
-            padding: 20px;
-            height: 100vh;
-            box-sizing: border-box;
-            overflow-y: auto;
-            background-color: #42464f;
-        }
         .hidden {
             display: none;
         }
@@ -34,71 +16,30 @@
             display: block;
             margin: 0 auto;
         }
-        .button-hideAfterClick,
-        .button-pass {
-            display: block;
-            width: 100%;
-            max-width: 180px;
-            margin: 10px 0;
-            padding: 15px;
-            font-size: 18px;
-            text-align: center;
-            cursor: pointer;
-            box-sizing: border-box;
-            background: linear-gradient(to right, #4dffaf, #357bbc);
-            color: #2f0c0b;
-            border: none;
-            border-radius: 18px;
-            transition: background-color 0.3s ease;
-        }
-        .button-hideAfterClick:hover,
-        .button-pass:hover {
-            background-color: #4882cd;
-        }
-        .bottom-right-container {
-            display: grid;
-            place-items: center;
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            padding: 20px;
-            background-color: #000000;
-            border-radius: 8px;
-            color: beige;
-            box-shadow: 30px 30px 10px rgba(22, 215, 8, 0.896);
-        }
-        h2 {
-            margin: 0;
-            font-size: 24px;
-        }
-        p {
-            font-size: 30px;
-            color: antiquewhite;
-        }
     </style>
 </head>
 <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
     <div class="container">
-        {% if file %}
-            <img src="{{ file }}" alt="Question Image" class="question-image">
+        {% if file != None %}
+            <img src="{{file}}" alt="Question Image" class="question-image">
         {% endif %}
-        <p id="question">{{ question }}</p>
+        <p id="question" style="font-size: 45px; color: antiquewhite;">{{ question }}</p>
         <button class="button-hideAfterClick" id="reveal_answer">Reveal Answer</button>
-        <button class="button-pass" id="pass_question">Pass Question</button>
-        <p id="answer" class="hidden">{{ answer }}</p>
+        <button class="button-pass" id="time">Pass Question</button>
+        <p id="answer" class="hidden" style="font-size: 30px; color: antiquewhite;">{{ answer }}</p>
         {% if iter < limit %}
-            <a href="{% url 'round:common' round='general_round' iter=iter|add:'1' %}" class="button button-hideAfterClick" id="next_question">Next Question</a>
+            <a href="{% url 'round:common' round='general_round' iter=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
         {% endif %}
-        <a href="{% url 'round:main' %}" class="button button-hideAfterClick" id="back_to_rounds">Back to Rounds</a>
+        <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
     </div>
     <div class="bottom-right-container">
-        <h2>Time left: <span id="countdown">15</span> seconds</h2>
+        <h2><p id="timer">Time left: <span id="countdown">15</span> seconds</p></h2>
     </div>
     <audio id="buzzer" src="{% static 'sounds/buzzer.mp3' %}" preload="auto"></audio>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var revealButton = document.getElementById('reveal_answer');
-            var passQuestionButton = document.getElementById('pass_question');
+            var addTimeButton = document.getElementById('time');
             var answer = document.getElementById('answer');
             var countdownElement = document.getElementById('countdown');
             var nextQuestionButton = document.getElementById('next_question');
@@ -117,7 +58,7 @@
                 } else {
                     clearInterval(timer);
                     timer = null;
-                    buzzer.play();
+                    buzzer.play(); // Play buzzer sound when time is over
                 }
             }
 
@@ -134,6 +75,7 @@
                 }
             }
 
+            // Start and stop the timer with Ctrl + Alt + T
             document.addEventListener('keydown', function(event) {
                 if (event.ctrlKey && event.altKey && event.key === 't') {
                     if (timer) {
@@ -144,29 +86,31 @@
                 }
             });
 
+            // Reveal answer logic
             revealButton.addEventListener('click', function() {
                 answer.classList.remove('hidden');
-                revealButton.classList.add('hidden');
-                passQuestionButton.classList.add('hidden');
+                revealButton.style.display = 'none'; // Hide button after answer is revealed
+                addTimeButton.disabled = true; // Disable the pass question button
+                addTimeButton.style.display = 'none';
             });
 
-            passQuestionButton.addEventListener('click', function() {
+            // Add time logic
+            addTimeButton.addEventListener('click', function() {
                 timeLeft += additionalTime;
                 countdownElement.textContent = timeLeft;
                 localStorage.setItem('remainingTime', timeLeft);
-                startTimer();
+                startTimer(); // Restart the timer if it's not running
             });
 
+            // Save remaining time when navigating to the next question
             nextQuestionButton.addEventListener('click', function() {
                 localStorage.setItem('remainingTime', timeLeft);
             });
 
+            // Clear remaining time when navigating back to rounds
             backToRoundsButton.addEventListener('click', function() {
                 localStorage.removeItem('remainingTime');
             });
-
-            // Start countdown timer immediately
-            startTimer();
         });
     </script>
 </body>
