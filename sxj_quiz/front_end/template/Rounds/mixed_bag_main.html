@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -77,6 +78,7 @@
         }
     </style>
 </head>
+
 <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
     <div class="container">
         <h1>Welcome to the Quiz Contest</h1><br>
@@ -87,10 +89,6 @@
         <a href="{% url 'round:main' %}" class="button back-button">Back to Rounds</a>
     </div>
 
-    <div class="bottom-right-container">
-        <h2><p id="timer">Time left: <span id="countdown">15</span> seconds</p></h2>
-    </div>
-    
     <!-- Buzzer sound -->
     <audio id="buzzer" src="{% static 'sounds/buzzer.mp3' %}" preload="auto"></audio>
 
@@ -122,25 +120,73 @@
                 }
             }
 
+            function setCookie(name, value, days) {
+                var expires = "";
+                if (days) {
+                    var date = new Date();
+                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                    expires = "; expires=" + date.toUTCString();
+                }
+                document.cookie = name + "=" + (value || "") + expires + "; path=/";
+            }
+
+            function getCookie(name) {
+                var nameEQ = name + "=";
+                var ca = document.cookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+                }
+                return null;
+            }
+
+            function eraseCookie(name) {
+                document.cookie = name + '=; Max-Age=-99999999;';
+            }
+
+            function initializeButtons() {
+                var clickedRounds = getCookie('clickedRounds');
+                clickedRounds = clickedRounds ? clickedRounds.split(',') : [];
+
+                document.querySelectorAll('.round-button').forEach(function(button) {
+                    var round = button.getAttribute('data-round');
+                    if (clickedRounds.includes(round)) {
+                        button.style.display = 'none';
+                    }
+                });
+            }
+
             document.addEventListener('keydown', function(event) {
                 if (event.key.toLowerCase() === 't') {
                     toggleTimer();
                 }
             });
 
-            // Button click logic for rounds
             document.querySelectorAll('.round-button').forEach(function(button) {
                 button.addEventListener('click', function() {
                     var selectedRound = this.getAttribute('data-round');
                     this.textContent = `${selectedRound}`;
                     this.disabled = true;
 
+                    // Update cookie with clicked round
+                    var clickedRounds = getCookie('clickedRounds');
+                    clickedRounds = clickedRounds ? clickedRounds.split(',') : [];
+                    if (!clickedRounds.includes(selectedRound)) {
+                        clickedRounds.push(selectedRound);
+                        setCookie('clickedRounds', clickedRounds.join(','), 7); // Cookie expires in 7 days
+                    }
+
                     setTimeout(function() {
                         window.location.href = `{% url 'round:mix-main' %}${selectedRound}/1`;
                     }, 5000);
                 });
             });
+
+            // Initialize button state on page load
+            initializeButtons();
         });
     </script>
 </body>
+
 </html>
