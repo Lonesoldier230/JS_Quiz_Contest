@@ -75,11 +75,12 @@
         {% if iter < limit %} 
             <a href="{% url 'round:mix' subject=subject iter=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
         {% endif %}
-        <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
+        <a href="{% url 'round:mix-main' %}" class="button" id="back_to_rounds">Back to Mixed Bag</a>
     </div>
     <div class="bottom-right-container">
         <h2><p id="timer">Time left: <span id="countdown">15</span> seconds</p></h2>
     </div>
+    <audio id="buzzer-sound" src="{% static 'sounds/buzzer.mp3' %}" preload="auto"></audio>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var revealButton = document.getElementById('reveal_answer');
@@ -87,6 +88,7 @@
             var countdownElement = document.getElementById('countdown');
             var nextQuestionButton = document.getElementById('next_question');
             var backToRoundsButton = document.getElementById('back_to_rounds');
+            var buzzerSound = document.getElementById('buzzer-sound');
 
             var timeLeft = 15;
             var timerRunning = false;
@@ -97,6 +99,7 @@
                 countdownElement.textContent = timeLeft;
                 if (timeLeft <= 0) {
                     stopTimer();
+                    buzzerSound.play(); // Play buzzer sound when time's up
                     console.log("Time's up!");
                 }
                 localStorage.setItem("remainingTime", timeLeft);
@@ -129,21 +132,29 @@
                     }
                 }
             });
-            
+
             backToRoundsButton.addEventListener('click', function () {
                 stopTimer();
                 localStorage.removeItem('remainingTime');
             });
-            
+
             revealButton.addEventListener('click', function () {
                 answer.classList.remove('hidden');
                 answer.style.display = 'block';
                 revealButton.style.display = 'none';
             });
+
             nextQuestionButton.addEventListener('click', function () {
                 stopTimer();
                 localStorage.setItem('remainingTime', timeLeft);
             });
+
+            // Initialize timer state
+            if (localStorage.getItem("remainingTime")) {
+                timeLeft = parseInt(localStorage.getItem("remainingTime"), 10);
+                countdownElement.textContent = timeLeft;
+                startTimer();
+            }
         });
     </script>
 </body>
