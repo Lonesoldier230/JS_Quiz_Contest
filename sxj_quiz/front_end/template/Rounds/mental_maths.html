@@ -71,7 +71,8 @@
             var buzzer = document.getElementById('buzzer');
 
             var timeLeft = 15;  // Adjust timer duration as needed
-            var timer = setInterval(updateCountdown, 1000);
+            var timer;
+            var timerRunning = false;
 
             revealButton.addEventListener('click', function () {
                 answer.style.display = 'block'; // Ensure the answer is displayed
@@ -88,6 +89,21 @@
                     revealButton.disabled = false;
                 }
             }
+
+            function toggleTimer() {
+                if (timerRunning) {
+                    clearInterval(timer);
+                } else {
+                    timer = setInterval(updateCountdown, 1000);
+                }
+                timerRunning = !timerRunning;
+            }
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key.toLowerCase() === 't') {
+                    toggleTimer();
+                }
+            });
         });
     </script>
 </body>

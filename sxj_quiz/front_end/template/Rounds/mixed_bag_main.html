@@ -12,17 +12,17 @@
             padding: 0;
             height: 100%;
             width: 100%;
-            box-sizing: border-box; /* Ensure padding and border are included in width/height calculations */
+            box-sizing: border-box;
         }
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Center content vertically */
+            justify-content: center;
             padding: 20px;
-            height: auto; /* Full viewport height */
-            box-sizing: border-box; /* Include padding in height calculation */
-            background-color: #42464f; /* Container background color */
+            height: auto;
+            box-sizing: border-box;
+            background-color: #42464f;
         }
         h1, h2 {
             color: antiquewhite;
@@ -30,22 +30,22 @@
         .button,
         .round-button {
             display: block;
-            width: 100%;  /* Full width of the column */
-            max-width: 180px;  /* Increased maximum width for better fit */
-            margin: 10px 0;  /* Adjusted margin for spacing */
+            width: 100%;
+            max-width: 180px;
+            margin: 10px 0;
             padding: 15px;
-            font-size: 18px;  /* Adjusted font size for better visibility */
+            font-size: 18px;
             text-align: center;
             cursor: pointer;
-            box-sizing: border-box; /* Include padding in width calculation */
-            background: linear-gradient(to right, #4dffaf, #357bbc); /* Gradient background */
-            color: #2f0c0b; /* Button text color */
+            box-sizing: border-box;
+            background: linear-gradient(to right, #4dffaf, #357bbc);
+            color: #2f0c0b;
             border: none;
-            border-radius: 18px; /* Rounded corners */
-            transition: background-color 0.3s ease; /* Smooth color transition */
+            border-radius: 18px;
+            transition: background-color 0.3s ease;
         }
         .round-button:hover {
-            background-color: #4882cd; /* Hover effect color */
+            background-color: #4882cd;
         }
         .hidden {
             display: none;
@@ -56,6 +56,25 @@
             display: block;
             margin: 0 auto;
         }
+        .bottom-right-container {
+            display: grid;
+            place-items: center;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            padding: 20px;
+            background-color: #000000;
+            border-radius: 8px;
+            color: beige;
+            box-shadow: 30px 30px 10px rgba(22, 215, 8, 0.896);
+        }
+        .bottom-right-container h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .bottom-right-container p {
+            font-size: 30px;
+        }
     </style>
 </head>
 <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
@@ -65,9 +84,50 @@
         {% for round in subjects %}
             <button class="button round-button" data-round="{{ round }}">{{ forloop.counter }}</button><br>
         {% endfor %}
+        <a href="{% url 'round:main' %}" class="button back-button">Back to Rounds</a>
     </div>
+
+    <div class="bottom-right-container">
+        <h2><p id="timer">Time left: <span id="countdown">15</span> seconds</p></h2>
+    </div>
+    
+    <!-- Buzzer sound -->
+    <audio id="buzzer" src="{% static 'sounds/buzzer.mp3' %}" preload="auto"></audio>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Timer setup
+            var timeLeft = 15;
+            var countdownElement = document.getElementById('countdown');
+            var buzzer = document.getElementById('buzzer');
+            var timer;
+
+            function updateCountdown() {
+                timeLeft--;
+                countdownElement.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    buzzer.play().catch(function(error) {
+                        console.error('Error playing the buzzer:', error);
+                    });
+                }
+            }
+
+            function toggleTimer() {
+                if (!timer) {
+                    timer = setInterval(updateCountdown, 1000);
+                } else {
+                    clearInterval(timer);
+                    timer = null;
+                }
+            }
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key.toLowerCase() === 't') {
+                    toggleTimer();
+                }
+            });
+
             // Button click logic for rounds
             document.querySelectorAll('.round-button').forEach(function(button) {
                 button.addEventListener('click', function() {

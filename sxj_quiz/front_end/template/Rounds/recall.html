@@ -10,7 +10,6 @@
     <style>
         .hidden {
             display: none;
-
             width: 450px;
             padding: 10px 20px;
             align-items: center;
@@ -27,69 +26,76 @@
             display: block;
         }
     </style>
-    </head>
-    
-    <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
-        <div class="container">
-            <div id="word-container" style="font-size: 45px; color:antiquewhite;"></div>
-            <button class="button hidden" id="reveal_button">Reveal All Words</button>
-            <div id="answers-container" class="hidden" style="font-size: 30px; color:antiquewhite;"></div>
-            {% if iter < limit %}
-                <a id="next_question" href="{% url 'round:recall' pk=iter|add:'1' %}" class="button">NextQuestion</a>
-            {% endif %}
-            <a href="{% url "round:main" %}" class="button hidden" id="back_button">Back to Rounds</a>
-        </div>
-        <div class="bottom-right-container">
-            <h2>
-                <p id="timer">Time left: <span id="countdown">10</span> seconds</p>
-            </h2>
-        </div>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                var words = {{ words| safe}};
-                var wordContainer = document.getElementById('word-container');
-                var countdownElement = document.getElementById('countdown');
-                var revealButton = document.getElementById('reveal_button');
-                var answersContainer = document.getElementById('answers-container');
-                var backButton = document.getElementById('back_button');
-                var bottomRightContainer = document.querySelector('.bottom-right-container');
+</head>
 
-                var currentWordIndex = 0;
-                var timeLeft = 10;
-                var timer = setInterval(updateCountdown, 1000);
-                function showNextWord() {
-                    if (currentWordIndex < words.length) {
-                        wordContainer.textContent = words[currentWordIndex];
-                        currentWordIndex++;
-                        timeLeft = 10;
-                    } else {
-                        clearInterval(timer);
-                        revealButton.classList.remove('hidden');
-                        wordContainer.classList.add('hidden');
-                        bottomRightContainer.classList.add('hidden');
-                    }
+<body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
+    <div class="container">
+        <div id="word-container" style="font-size: 45px; color:antiquewhite;"></div>
+        <button class="button hidden" id="reveal_button">Reveal All Words</button>
+        <div id="answers-container" class="hidden" style="font-size: 30px; color:antiquewhite;"></div>
+        
+        <!-- Buttons -->
+        {% if iter < limit %}
+            <a id="next_question" href="{% url 'round:recall' iter=iter|add:'1' %}" class="button hidden">Next Question</a>
+        {% endif %}
+        <a href="{% url "round:main" %}" class="button hidden" id="back_button">Back to Rounds</a>
+    </div>
+    <div class="bottom-right-container">
+        <h2>
+            <p id="timer">Time left: <span id="countdown">10</span> seconds</p>
+        </h2>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var words = {{ words|safe }};
+            var wordContainer = document.getElementById('word-container');
+            var countdownElement = document.getElementById('countdown');
+            var revealButton = document.getElementById('reveal_button');
+            var answersContainer = document.getElementById('answers-container');
+            var backButton = document.getElementById('back_button');
+            var nextButton = document.getElementById('next_question');
+            var bottomRightContainer = document.querySelector('.bottom-right-container');
+
+            var currentWordIndex = 0;
+            var timeLeft = 1; // Adjusted timer to 10 seconds
+            var timer = setInterval(updateCountdown, 1000);
+
+            function showNextWord() {
+                if (currentWordIndex < words.length) {
+                    wordContainer.textContent = words[currentWordIndex];
+                    currentWordIndex++;
+                    timeLeft = 1; // Reset timer for next word
+                } else {
+                    clearInterval(timer);
+                    revealButton.classList.remove('hidden');
+                    wordContainer.classList.add('hidden');
+                    bottomRightContainer.classList.add('hidden');
                 }
-                function updateCountdown() {
-                    timeLeft--;
-                    countdownElement.textContent = timeLeft;
-                    if (timeLeft <= 0) {
-                        showNextWord();
-                    }
+            }
+
+            function updateCountdown() {
+                timeLeft--;
+                countdownElement.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    showNextWord();
                 }
+            }
 
             revealButton.addEventListener('click', function () {
                 var html = '';
                 for (var i = 0; i < words.length; i++) {
-                    html += '<p>' + words[i];
+                    html += '<p>' + words[i] + '</p>'; // Added closing tag
                 }
                 answersContainer.innerHTML = html;
                 answersContainer.classList.remove('hidden');
                 revealButton.classList.add('hidden');
                 backButton.classList.remove('hidden');
+                nextButton.classList.remove('hidden'); // Show the Next Question button
             });
 
             showNextWord();  // Show the first word immediately
-            });
-        </script>
-    </body>
+        });
+    </script>
+</body>
+
 </html>

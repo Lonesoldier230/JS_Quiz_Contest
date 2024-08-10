@@ -20,6 +20,10 @@
             display: block;
             margin: 0 auto;
         }
+        #countdown {
+            font-size: 20px;
+            color: antiquewhite;
+        }
     </style>
 </head>
 <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
@@ -46,6 +50,11 @@
             <a href="{% url 'round:common' round='audio_visual' iter=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
         {% endif %}
         <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
+        <div id="timer-container">
+            <p>Time left: <span id="countdown">15</span> seconds</p>
+        </div>
+        <!-- Buzzer sound -->
+        <audio id="buzzer" src="{% static 'audio/buzzer.mp3' %}" preload="auto"></audio>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -54,6 +63,7 @@
             var countdownElement = document.getElementById('countdown');
             var nextQuestionButton = document.getElementById('next_question');
             var backToRoundsButton = document.getElementById('back_to_rounds');
+            var buzzer = document.getElementById('buzzer');
 
             var timeLeft = 15;
             // Initialize countdown timer
@@ -64,6 +74,7 @@
                 countdownElement.textContent = timeLeft;
                 if (timeLeft <= 0) {
                     clearInterval(timer);
+                    buzzer.play(); // Play buzzer sound when time is up
                 }
                 localStorage.setItem("remainingTime", timeLeft);
             }
@@ -73,10 +84,13 @@
                 answer.classList.remove('hidden');
                 revealButton.style.display = 'none'; // Hide button after answer is revealed
             });
+
             // Clear remaining time when navigating back to rounds
             backToRoundsButton.addEventListener('click', function() {
                 localStorage.removeItem('remainingTime');
             });
+
+            // Save remaining time when navigating to the next question
             nextQuestionButton.addEventListener('click', function() {
                 localStorage.setItem('remainingTime', timeLeft);
             });

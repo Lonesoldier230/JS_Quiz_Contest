@@ -26,10 +26,11 @@
             border-radius: 5px;
             text-decoration: none;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.3s;
         }
         .button:hover {
             background-color: #0056b3;
+            transform: scale(1.05);
         }
         #answer {
             font-size: 30px;
@@ -53,40 +54,29 @@
         }
     </style>
     <script>
+        // Function to start the timer
         function startTimer(duration, display) {
-            var timer = duration, minutes, seconds;
+            var timer = duration;
+            var buzzer = document.getElementById('buzzer');
+            
+            // Update the timer display every second
             var interval = setInterval(function () {
-                minutes = parseInt(timer / 60, 10);
-                seconds = parseInt(timer % 60, 10);
-
-                minutes = minutes < 10 ? "0" + minutes : minutes;
-                seconds = seconds < 10 ? "0" + seconds : seconds;
-
-                display.textContent = minutes + ":" + seconds;
-
-                if (--timer < 0) {
+                display.textContent = timer;
+                
+                if (timer <= 0) {
                     clearInterval(interval);
-                    display.textContent = "00:00";
+                    display.textContent = "0";
+                    buzzer.play();  // Play buzzer sound when time is over
                     alert('Time is up!');
+                } else {
+                    timer--;
+                    // Update the remaining time in localStorage
+                    localStorage.setItem('quizTime', timer);
                 }
-
-                localStorage.setItem("quizTime", timer);
             }, 1000);
-
-            // Clear timer from localStorage when leaving the page
-            window.addEventListener('beforeunload', function() {
-                if (window.location.href.includes('back_to_rounds')) {
-                    localStorage.removeItem('quizTime');
-                }
-            });
-
-            // Save remaining time to localStorage when navigating to the next question
-            document.getElementById('next_question').addEventListener('click', function () {
-                localStorage.setItem('quizTime', timer);
-            });
-
-            // Clear remaining time from localStorage when navigating back to rounds
-            document.getElementById('back_to_rounds').addEventListener('click', function () {
+            
+            // Clear localStorage when navigating back to rounds
+            document.getElementById('back_to_rounds')?.addEventListener('click', function () {
                 localStorage.removeItem('quizTime');
             });
         }
@@ -97,11 +87,38 @@
             var display = document.querySelector('#time');
             startTimer(timeLeft, display);
 
+            // Initialize or update question counter
+            var questionCounter = parseInt(localStorage.getItem('questionCounter')) || 0;
+            var maxQuestions = 6; // Limit to 6 questions
+
+            // Hide "Next Question" button if max questions reached
+            var nextQuestionButton = document.getElementById('next_question');
+            if (nextQuestionButton) {
+                if (questionCounter >= maxQuestions) {
+                    nextQuestionButton.style.display = 'none';
+                }
+
+                // Increment question counter and save it to localStorage
+                nextQuestionButton.addEventListener('click', function () {
+                    questionCounter++;
+                    localStorage.setItem('questionCounter', questionCounter);
+
+                    if (questionCounter >= maxQuestions) {
+                        nextQuestionButton.style.display = 'none';
+                    }
+                });
+            }
+
+            // Reset question counter when navigating back to rounds
+            document.getElementById('back_to_rounds')?.addEventListener('click', function () {
+                localStorage.removeItem('questionCounter');
+            });
+
             var revealButton = document.getElementById('reveal_answer');
             var answer = document.getElementById('answer');
             var countdownElement = document.getElementById('countdown');
 
-            var revealTimeLeft = 15;  // Adjust timer duration for reveal as needed
+            var revealTimeLeft = 35;  // Adjust timer duration for reveal as needed
             var revealTimer = setInterval(function () {
                 revealTimeLeft--;
                 countdownElement.textContent = revealTimeLeft;
@@ -110,10 +127,12 @@
                 }
             }, 1000);
 
-            revealButton.addEventListener('click', function () {
-                answer.classList.remove('hidden');
-                revealButton.style.display = 'none'; // Hide button after answer is revealed
-            });
+            if (revealButton) {
+                revealButton.addEventListener('click', function () {
+                    answer.classList.remove('hidden');
+                    revealButton.style.display = 'none'; // Hide button after answer is revealed
+                });
+            }
         });
     </script>
 </head>
@@ -133,6 +152,7 @@
         {% endif %}
 
         <p id="answer" class="hidden">{{ answer }}</p>
+
         <form id="quiz_form" method="POST">
             {% csrf_token %}
             {% for question in questions %}
@@ -140,18 +160,18 @@
                     <p>{{ question.question_text }}</p>
                     <input type="text" name="question_{{ forloop.counter0 }}">
                     {% if file != None %}
-                        <img src="{{file}}" alt="Question Image" style="max-width: 100%; height: auto;">
+                        <img src="{{ file }}" alt="Question Image" style="max-width: 100%; height: auto;">
                     {% endif %}
                 </div>
             {% endfor %}
         </form>
-        {% if iter < limit %}
-        <a id="next_question" href="{% url 'round:common' round='rapid_fire' iter=iter|add:'1' %}" class="button">Next Question</a>
-        {% endif %}
+
+        <a id="next_question" href="{% url 'round:common' round='rapid_fire' iter=iter|add:'1' %}" data-iter="{{ iter }}" data-max-iter="{{ max_iter }}" class="button">Next Question</a>
         <a id="back_to_rounds" href="{% url 'round:main' %}" class="button">Back to Rounds</a>
     </div>
+    <audio id="buzzer" src="{% static 'sounds/buzzer.mp3' %}" preload="auto"></audio>
     <div class="bottom-right-container">
-        <h2><p id="timer">Time left: <span id="time">00:35</span></p></h2>
+        <h2><p id="timer">Time left: <span id="time">35</span> seconds</p></h2>
     </div>
 </body>
 </html>

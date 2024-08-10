@@ -17,16 +17,10 @@
         <!-- Button to reveal the answer -->
         <button class="button-hideAfterClick" id="reveal_answer">Reveal Answer</button>
          
-        
         <p id="answer" class="hidden" style="font-size: 30px; color: antiquewhite;">{{ answer }}</p>
-        
         
         <!-- Button to pass the question and add time -->
         <button class="button-pass" id="time">Pass Question</button>
-
-        <!-- The answer text, hidden by default -->
-       
-
 
         <!-- Button to navigate back to the rounds menu -->
         <a href="{% url 'round:general' %}" class="button" id="back_to_question">Back to Questions</a>
@@ -34,8 +28,11 @@
 
     <!-- Timer display -->
     <div class="bottom-right-container">
-        <p id="timer">Time left: <span id="countdown">15</span> seconds</p>
+        <h1><p id="timer">Time left: <span id="countdown">15</span> seconds</p></h1>
     </div>
+
+    <!-- Buzzer sound -->
+    <audio id="buzzer" src="{% static 'sounds/buzzer.mp3' %}" preload="auto"></audio>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -43,27 +40,48 @@
             var addTimeButton = document.getElementById('time');
             var answer = document.getElementById('answer');
             var countdownElement = document.getElementById('countdown');
+            var buzzer = document.getElementById('buzzer');
             var nextQuestionButton = document.getElementById('next_question');
             var backToRoundsButton = document.getElementById('back_to_question');
 
             var timeLeft = 15;
             var additionalTime = 5;
-            var timer = setInterval(updateCountdown, 1000);
+            var timer;
+            var timerRunning = false;
 
             function updateCountdown() {
                 if (timeLeft > 0) {
                     timeLeft--;
                     countdownElement.textContent = timeLeft;
                     localStorage.setItem("remainingTime", timeLeft);
+                } else {
+                    clearInterval(timer);
+                    buzzer.play();  // Play buzzer sound when time is over
                 }
             }
+
+            function toggleTimer() {
+                if (timerRunning) {
+                    clearInterval(timer);
+                    timer = null;  // Set timer to null when stopped
+                } else {
+                    timer = setInterval(updateCountdown, 1000);
+                }
+                timerRunning = !timerRunning;
+            }
+
+            // Event listener for "T" key to toggle timer
+            document.addEventListener('keydown', function(event) {
+                if (event.key.toLowerCase() === 't') {
+                    toggleTimer();
+                }
+            });
 
             // Reveal answer logic
             revealButton.addEventListener('click', function() {
                 answer.classList.remove('hidden');
                 answer.style.display = 'block'; // Ensure the answer is displayed
-                revealButton.style.display = 'none';// Hide button after answer is revealed
-                
+                revealButton.style.display = 'none'; // Hide button after answer is revealed
             });
 
             // Add time logic
