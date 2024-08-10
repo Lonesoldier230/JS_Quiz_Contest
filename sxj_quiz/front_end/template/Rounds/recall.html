@@ -36,7 +36,7 @@
         
         <!-- Buttons -->
         {% if iter < limit %}
-            <a id="next_question" href="{% url 'round:recall' iter=iter|add:'1' %}" class="button hidden">Next Question</a>
+            <a id="next_question" href="{% url 'round:recall' pk=iter|add:'1' %}" class="button hidden">Next Question</a>
         {% endif %}
         <a href="{% url "round:main" %}" class="button hidden" id="back_button">Back to Rounds</a>
     </div>
@@ -64,7 +64,7 @@
                 if (currentWordIndex < words.length) {
                     wordContainer.textContent = words[currentWordIndex];
                     currentWordIndex++;
-                    timeLeft = 1; // Reset timer for next word
+                    timeLeft = 10; // Reset timer for next word
                 } else {
                     clearInterval(timer);
                     revealButton.classList.remove('hidden');

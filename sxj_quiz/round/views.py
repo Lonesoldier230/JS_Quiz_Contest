@@ -109,7 +109,8 @@ def recall(request, pk):
     
     ctxt = {
         "words":db.words,
-        "iter":pk
+        "iter":pk,
+        "limit":len(Memory.objects.all())
     }
     
     request.session["recall"] = int(pk)
