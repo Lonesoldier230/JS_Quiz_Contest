@@ -73,16 +73,12 @@
         <div class="row">
             <div class="column">
                 {% for i in one_s %}
-                <a href="{% url 'round:common' round='general_round' iter=i %}">
-                    <button class="button" id="question_{{ i }}" onclick="selectQuestion({{ i }})">Question {{ i }}</button>
-                </a>
+                    <a href="{% url 'round:common' round='general_round' iter=i %}"><button class="button" id="question_{{ i }}" onclick="selectQuestion({{ i }})">Question {{ i }}</button></a>
                 {% endfor %}
             </div>
             <div class="column">
                 {% for i in s_th %}
-                <a href="{% url 'round:common' round='general_round' iter=i %}">
-                    <button class="button" id="question_{{ i }}" onclick="selectQuestion({{ i }})">Question {{ i }}</button>
-                </a>
+                    <a href="{% url 'round:common' round='general_round' iter=i %}"><button class="button" id="question_{{ i }}" onclick="selectQuestion({{ i }})">Question {{ i }}</button></a>
                 {% endfor %}
             </div>
         </div>
