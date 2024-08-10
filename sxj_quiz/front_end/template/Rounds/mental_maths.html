@@ -1,4 +1,3 @@
-<!-- quiz_page.html -->
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -28,27 +27,6 @@
         .hidden {
             display: none;
         }
-        .button-hideAfterClick,
-        .button {
-            display: block;
-            width: 100%;  /* Full width of the column */
-            max-width: 180px;  /* Increased maximum width for better fit */
-            margin: 10px 0;  /* Adjusted margin for spacing */
-            padding: 15px;
-            font-size: 18px;  /* Adjusted font size for better visibility */
-            text-align: center;
-            cursor: pointer;
-            box-sizing: border-box; /* Include padding in width calculation */
-            background: linear-gradient(to right, #4dffaf, #357bbc); /* Gradient background */
-            color: #2f0c0b; /* Button text color */
-            border: none;
-            border-radius: 18px; /* Rounded corners */
-            transition: background-color 0.3s ease; /* Smooth color transition */
-        }
-        .button-hideAfterClick:hover,
-        .button:hover {
-            background-color: #4882cd; /* Hover effect color */
-        }
         .bottom-right-container {
             display: grid;
             place-items: center;
@@ -74,7 +52,7 @@
 <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
     <div class="container">
         <p id="question">{{ question }}</p>
-        <button class="button-hideAfterClick" id="reveal_answer" disabled>Reveal Answer</button>
+        <button class="button" id="reveal_answer">Reveal Answer</button>
         <p id="answer" class="hidden">{{ answer }}</p>
         {% if iter < limit %}
             <a href="{% url 'round:common' round='mental_maths' iter=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
@@ -95,6 +73,12 @@
             var timeLeft = 15;  // Adjust timer duration as needed
             var timer = setInterval(updateCountdown, 1000);
 
+            revealButton.addEventListener('click', function () {
+                answer.style.display = 'block'; // Ensure the answer is displayed
+                answer.classList.remove('hidden');
+                revealButton.style.display = 'none';
+            });
+
             function updateCountdown() {
                 timeLeft--;
                 countdownElement.textContent = timeLeft;
@@ -104,11 +88,6 @@
                     revealButton.disabled = false;
                 }
             }
-
-            revealButton.addEventListener('click', function() {
-                answer.classList.remove('hidden');
-                revealButton.disabled = true; // Disable button after answer is revealed
-            });
         });
     </script>
 </body>

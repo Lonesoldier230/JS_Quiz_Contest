@@ -73,15 +73,12 @@
                 answer.classList.remove('hidden');
                 revealButton.style.display = 'none'; // Hide button after answer is revealed
             });
-
-            // Save remaining time when navigating to the next question
-            nextQuestionButton.addEventListener('click', function() {
-                localStorage.setItem('remainingTime', timeLeft);
-            });
-
             // Clear remaining time when navigating back to rounds
             backToRoundsButton.addEventListener('click', function() {
                 localStorage.removeItem('remainingTime');
+            });
+            nextQuestionButton.addEventListener('click', function() {
+                localStorage.setItem('remainingTime', timeLeft);
             });
         });
     </script>

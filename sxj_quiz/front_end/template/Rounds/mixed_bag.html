@@ -21,7 +21,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            height: 100vh;
+            height: auto;
             box-sizing: border-box;
             background-color: #42464f;
         }
@@ -129,20 +129,20 @@
                     }
                 }
             });
-
-            nextQuestionButton.addEventListener('click', function () {
-                stopTimer();
-                localStorage.setItem('remainingTime', timeLeft);
-            });
-
+            
             backToRoundsButton.addEventListener('click', function () {
                 stopTimer();
                 localStorage.removeItem('remainingTime');
             });
-
+            
             revealButton.addEventListener('click', function () {
                 answer.classList.remove('hidden');
+                answer.style.display = 'block';
                 revealButton.style.display = 'none';
+            });
+            nextQuestionButton.addEventListener('click', function () {
+                stopTimer();
+                localStorage.setItem('remainingTime', timeLeft);
             });
         });
     </script>

@@ -104,16 +104,15 @@
                 }
             });
 
-            // Save remaining time when navigating to the next question
-            nextQuestionButton.addEventListener('click', function() {
-                stopTimer();
-                localStorage.setItem('remainingTime', timeLeft);
-            });
-
             // Clear remaining time when navigating back to rounds
             backToRoundsButton.addEventListener('click', function() {
                 stopTimer();
                 localStorage.removeItem('remainingTime');
+            });
+            
+            nextQuestionButton.addEventListener('click', function() {
+                stopTimer();
+                localStorage.setItem('remainingTime', timeLeft);
             });
         });
     </script>

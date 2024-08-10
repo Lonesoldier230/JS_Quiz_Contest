@@ -51,17 +51,12 @@
             display: inline-block;
             padding: 10px 20px;
             font-size: 18px;
-            color: white;
-            background: #007bff;
             border: none;
             border-radius: 5px;
             text-decoration: none;
             text-align: center;
             cursor: pointer;
             transition: background-color 0.3s ease;
-        }
-        .button:hover {
-            background-color: #0056b3;
         }
         .bottom-right-container {
             position: absolute;
@@ -140,12 +135,12 @@
                 });
             });
 
-            nextQuestionButton.addEventListener('click', function() {
-                localStorage.setItem('remainingTime', timeLeft);
-            });
-
             backToRoundsButton.addEventListener('click', function() {
                 localStorage.removeItem('remainingTime');
+            });
+
+            nextQuestionButton.addEventListener('click', function() {
+                localStorage.setItem('remainingTime', timeLeft);
             });
         });
     </script>
