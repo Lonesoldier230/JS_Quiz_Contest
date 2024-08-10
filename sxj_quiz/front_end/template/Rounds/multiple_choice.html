@@ -82,17 +82,15 @@
             text-align: center;
         }
         .button-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             gap: 20px;
             margin-top: 20px;
-            justify-content: center;
             text-align: center;
         }
-        .button-container a {
-            min-width: 80px;
-            text-align: center;
-            padding: 15px;
+        .centered {
+            justify-content: center;
         }
         .bottom-right-container {
             display: grid;
@@ -134,10 +132,12 @@
         
         <p id="result" class="hidden" style="font-size: 30px; color: antiquewhite;">{{ answer }}</p>
         
-        <div class="button-container">
-            <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
+        <div class="button-container" id="button-container">
             {% if iter < limit %}
                 <a href="{% url 'round:multiple' pk=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
+                <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
+            {% else %}
+                <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
             {% endif %}
         </div>
     </div>
@@ -157,6 +157,7 @@
             var nextQuestionButton = document.getElementById('next_question');
             var backToRoundsButton = document.getElementById('back_to_rounds');
             var buzzer = document.getElementById('buzzer');
+            var buttonContainer = document.getElementById('button-container');
 
             var correctAnswer = "{{ answer }}";
             var timeLeft = 15;
@@ -216,6 +217,17 @@
             nextQuestionButton.addEventListener('click', function() {
                 localStorage.setItem('remainingTime', timeLeft);
             });
+
+            function updateButtonPosition() {
+                if (!nextQuestionButton) {
+                    buttonContainer.classList.add('centered');
+                } else {
+                    buttonContainer.classList.remove('centered');
+                }
+            }
+
+            // Check button state on load
+            updateButtonPosition();
         });
     </script>
 </body>

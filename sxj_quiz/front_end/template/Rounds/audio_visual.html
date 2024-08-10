@@ -21,8 +21,34 @@
             margin: 0 auto;
         }
         #countdown {
-            font-size: 20px;
+            font-size: 30px;
             color: antiquewhite;
+        }
+        #timer-container {
+            display: grid;
+            place-items: center;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            padding: 20px;
+            background-color: #000000;
+            border-radius: 8px;
+            color: beige;
+            box-shadow: 30px 30px 10px rgba(22, 215, 8, 0.896);
+        }
+        .button {
+            display: block;
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-sizing: border-box;
+            min-width: 80px;
+            text-align: center;
         }
     </style>
 </head>
@@ -44,7 +70,7 @@
             {% endif %}
         </div>
         <p id="question" style="font-size: 45px; color: antiquewhite;">{{ question }}</p>
-        <button class="button-hideAfterClick" id="reveal_answer">Reveal Answer</button>
+        <button class="button" id="reveal_answer">Reveal Answer</button>
         <p id="answer" class="hidden" style="font-size: 30px; color: antiquewhite;">{{ answer }}</p>
         {% if iter < limit %}
             <a href="{% url 'round:common' round='audio_visual' iter=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
@@ -54,7 +80,7 @@
             <p>Time left: <span id="countdown">15</span> seconds</p>
         </div>
         <!-- Buzzer sound -->
-        <audio id="buzzer" src="{% static 'audio/buzzer.mp3' %}" preload="auto"></audio>
+        <audio id="buzzer" src="{% static 'sounds/buzzer.mp3' %}" preload="auto"></audio>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -64,10 +90,11 @@
             var nextQuestionButton = document.getElementById('next_question');
             var backToRoundsButton = document.getElementById('back_to_rounds');
             var buzzer = document.getElementById('buzzer');
+            var timerContainer = document.getElementById('timer-container');
 
             var timeLeft = 15;
-            // Initialize countdown timer
-            var timer = setInterval(updateCountdown, 1000);
+            var timer;
+            var timerRunning = false;
 
             function updateCountdown() {
                 timeLeft--;
@@ -75,9 +102,25 @@
                 if (timeLeft <= 0) {
                     clearInterval(timer);
                     buzzer.play(); // Play buzzer sound when time is up
+                    countdownElement.textContent = 'Time is up!';
                 }
                 localStorage.setItem("remainingTime", timeLeft);
             }
+
+            function toggleTimer() {
+                if (timerRunning) {
+                    clearInterval(timer);
+                } else {
+                    timer = setInterval(updateCountdown, 1000);
+                }
+                timerRunning = !timerRunning;
+            }
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key.toLowerCase() === 't') {
+                    toggleTimer();
+                }
+            });
 
             // Reveal answer logic
             revealButton.addEventListener('click', function() {
