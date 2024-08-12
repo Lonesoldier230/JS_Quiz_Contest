@@ -39,7 +39,7 @@
         }
         .option {
             padding: 20px;
-            background: linear-gradient(45deg, #00b4db, #0083b0);
+            background: linear-gradient(45deg, #00b4db, #0083b0); /* Default color */
             border: none;
             border-radius: 15px;
             font-size: 24px;
@@ -56,16 +56,22 @@
             box-sizing: border-box;
             width: 100%; /* Make buttons take full width of their grid cell */
         }
+        .option.highlight {
+            border: 2px solid #ffffff; /* Add a border to indicate selection */
+            background: rgba(255, 255, 255, 0.2); /* Slight highlight effect */
+        }
+        .option.correct {
+            background: #28a745; /* Green for correct */
+            border: 2px solid #ffffff; /* White border for selected option */
+        }
+        .option.incorrect {
+            background: #dc3545; /* Red for incorrect */
+            border: 2px solid #ffffff; /* White border for selected option */
+        }
         .option:hover {
             background: linear-gradient(45deg, #0093E9, #80D0C7);
             box-shadow: 0px 15px 20px rgba(0, 147, 233, 0.4);
             transform: translateY(-5px);
-        }
-        .correct {
-            background: #28a745;
-        }
-        .incorrect {
-            background: #dc3545;
         }
         .button {
             display: block;
@@ -133,12 +139,14 @@
         <p id="result" class="hidden" style="font-size: 30px; color: antiquewhite;">{{ answer }}</p>
         
         <div class="button-container" id="button-container">
+            <button class="button" id="reveal_answer">Reveal Answer</button>    
             {% if iter < limit %}
                 <a href="{% url 'round:multiple' pk=iter|add:'1' %}" class="button" id="next_question">Next Question</a>
                 <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
             {% else %}
                 <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
             {% endif %}
+            
         </div>
     </div>
     
@@ -156,6 +164,7 @@
             var countdownElement = document.getElementById('countdown');
             var nextQuestionButton = document.getElementById('next_question');
             var backToRoundsButton = document.getElementById('back_to_rounds');
+            var revealAnswerButton = document.getElementById('reveal_answer');
             var buzzer = document.getElementById('buzzer');
             var buttonContainer = document.getElementById('button-container');
 
@@ -196,17 +205,29 @@
 
             options.forEach(function(option) {
                 option.addEventListener('click', function() {
+                    // Highlight the clicked option without revealing correctness
+                    options.forEach(opt => opt.classList.remove('highlight')); // Remove previous highlights
+                    option.classList.add('highlight');
+                });
+            });
+
+            revealAnswerButton.addEventListener('click', function() {
+                options.forEach(function(option) {
                     if (option.getAttribute('data-option') === correctAnswer) {
                         option.classList.add('correct');
-                        result.textContent = 'Correct!';
                     } else {
                         option.classList.add('incorrect');
-                        result.textContent = 'Incorrect!';
                     }
-                    result.classList.remove('hidden');
-                    options.forEach(function(opt) {
-                        opt.style.pointerEvents = 'none'; // Disable option clicks after an answer is selected
-                    });
+                });
+                result.textContent = options.find(opt => opt.classList.contains('correct')) ? 'Correct!' : 'Incorrect!';
+                result.classList.remove('hidden');
+                options.forEach(function(opt) {
+                    if (opt.classList.contains('highlight')) {
+                        opt.classList.remove('correct', 'incorrect'); // Remove previous colors
+                        opt.classList.add('highlight'); // Keep highlight for selected option
+                    } else {
+                        opt.style.pointerEvents = 'none'; // Disable option clicks after revealing answer
+                    }
                 });
             });
 
