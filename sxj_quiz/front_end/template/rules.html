@@ -3,21 +3,73 @@
 {% load static %}
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static "style/styles.css" %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "style/styles.css" %}">
     <title>Quiz Round Rules</title>
-</head>
-<body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
     <style>
-        li{
-            list-style-type: none;
+        /* Ensure the body and html take up full height */
+        html, body {
             margin: 0;
             padding: 0;
+            height: 100%;
+            overflow: hidden; /* Prevent scrolling */
+        }
+
+        /* Set background image and scale to fit */
+        body {
+            background-image: url('{% static "images/quiz.png" %}');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.74); /* Optional: semi-transparent background for better readability */
+            border-radius: 8px;
+            padding: 20px;
+            text-align: justify;
+            max-width: 90%; /* Prevent container from being too wide */
+            box-sizing: border-box;
+        }
+
+        h1 {
+            margin: 0;
+            padding: 10px;
+            color: aliceblue;
+        }
+
+        ol {
+            padding-left: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        li {
+            margin: 10px 0;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
         }
     </style>
+</head>
+<body>
     <div class="container">
         <h1>Round {{ round }}</h1>
-        <h1>Rules</h1><br>
+        <h1 style="color: antiquewhite;">Rules</h1><br>
         <ol>
             {% for i in rules %}
                 <li><h1 style="color: {% cycle 'lightblue' 'lightgreen' %};">{{ i }}</h1></li>
