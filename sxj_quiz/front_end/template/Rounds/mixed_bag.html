@@ -149,7 +149,7 @@
 
             // Initialize timer state
             if (localStorage.getItem("remainingTime")) {
-                timeLeft = parseInt(localStorage.getItem("remainingTime"), 10);
+                timeLeft = parseInt(localStorage.getItem("remainingTime"), 15);
                 countdownElement.textContent = timeLeft;
                 startTimer();
             }

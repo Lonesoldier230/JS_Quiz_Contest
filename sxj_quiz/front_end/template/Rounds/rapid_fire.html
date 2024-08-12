@@ -27,6 +27,8 @@
             text-decoration: none;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.3s;
+            color: white;
+            background-color: #007bff; /* Default button color */
         }
         .button:hover {
             background-color: #0056b3;
@@ -67,7 +69,6 @@
                     clearInterval(interval);
                     display.textContent = "0";
                     buzzer.play();  // Play buzzer sound when time is over
-                    alert('Time is up!');
                 } else {
                     timer--;
                     // Update the remaining time in localStorage

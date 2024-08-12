@@ -17,6 +17,29 @@
             display: block;
             margin: 0 auto;
         }
+        .bottom-right-container {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 20px;
+            color: antiquewhite;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            color: white;
+            background-color: #007bff; /* Default button color */
+        }
+        .button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
@@ -32,13 +55,17 @@
         {% endif %}
         <a href="{% url 'round:main' %}" class="button" id="back_to_rounds">Back to Rounds</a>
     </div>
-   
+
+    <!-- Timer Display -->
+    <div class="bottom-right-container">
+        <p id="timer">Time left: <span id="time">0</span> seconds</p>
+    </div>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var revealButton = document.getElementById('reveal_answer');
-            var addTimeButton = document.getElementById('add_time');
             var answer = document.getElementById('answer');
-            var countdownElement = document.getElementById('countdown');
+            var countdownElement = document.getElementById('time');
             var nextQuestionButton = document.getElementById('next_question');
             var backToRoundsButton = document.getElementById('back_to_rounds');
 
@@ -92,15 +119,16 @@
             });
 
             // Add time logic
-            addTimeButton.addEventListener('click', function() {
-                timeLeft += additionalTime;
-                countdownElement.textContent = timeLeft;
-                addTimeButton.style.display = 'none'; // Hide button after adding time
-                localStorage.setItem('remainingTime', timeLeft);
-                if (timeLeft > 0 && timer === null) {
-                    startTimer(); // Start the timer if it's not running
-                }
-            });
+            if (document.getElementById('add_time')) {
+                document.getElementById('add_time').addEventListener('click', function() {
+                    timeLeft += additionalTime;
+                    countdownElement.textContent = timeLeft;
+                    localStorage.setItem('remainingTime', timeLeft);
+                    if (timeLeft > 0 && timer === null) {
+                        startTimer(); // Start the timer if it's not running
+                    }
+                });
+            }
 
             // Clear remaining time when navigating back to rounds
             backToRoundsButton.addEventListener('click', function() {
@@ -112,6 +140,13 @@
                 stopTimer();
                 localStorage.setItem('remainingTime', timeLeft);
             });
+
+            // Initialize timer from localStorage if available
+            var storedTime = localStorage.getItem("remainingTime");
+            if (storedTime) {
+                timeLeft = parseInt(storedTime);
+                countdownElement.textContent = timeLeft;
+            }
         });
     </script>
 </body>
