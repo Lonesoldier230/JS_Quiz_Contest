@@ -1,12 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Page</title>
     <link rel="stylesheet" href="{% static 'style/styles.css' %}">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            background-color: #42464f;
+            min-width: 1000px; /* Ensure container has minimum width */
+        }
+        .hidden {
+            display: none;
+        }
+        .button-hideAfterClick, .button-pass, .button {
+            display: block;
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-sizing: border-box;
+            min-width: 80px;
+            color: white;
+            background-color: #007bff; /* Default button color */
+        }
+        .button-hideAfterClick {
+            background-color: #28a745; /* Green for reveal answer */
+        }
+        .button-pass {
+            background-color: #ffc107; /* Yellow for pass question */
+        }
+        .button:hover {
+            background-color: #0056b3; /* Darker color on hover */
+        }
+        .bottom-right-container {
+            display: grid;
+            place-items: center;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            padding: 20px;
+            background-color: #000000;
+            border-radius: 8px;
+            color: beige;
+            box-shadow: 30px 30px 10px rgba(22, 215, 8, 0.896);
+        }
+    </style>
 </head>
+
 <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
     <div class="container">
         {% if file != None %}
@@ -16,10 +77,10 @@
 
         <!-- Button to reveal the answer -->
         <button class="button-hideAfterClick" id="reveal_answer">Reveal Answer</button>
-         
+
         <p id="answer" class="hidden" style="font-size: 30px; color: antiquewhite;">{{ answer }}</p>
-        
-        <!-- Button to pass the question and add time -->
+
+        <!-- Button to pass the question and reset timer -->
         <button class="button-pass" id="time">Pass Question</button>
 
         <!-- Button to navigate back to the rounds menu -->
@@ -41,7 +102,6 @@
             var answer = document.getElementById('answer');
             var countdownElement = document.getElementById('countdown');
             var buzzer = document.getElementById('buzzer');
-            var nextQuestionButton = document.getElementById('next_question');
             var backToRoundsButton = document.getElementById('back_to_question');
 
             var timeLeft = 15;
@@ -94,12 +154,18 @@
                 }
             });
 
-            // Save remaining time when navigating to the next question
-            if (nextQuestionButton) {
-                nextQuestionButton.addEventListener('click', function() {
-                    localStorage.setItem('remainingTime', timeLeft);
-                });
-            }
+            // Reset timer to 5 seconds when passing the question
+            addTimeButton.addEventListener('click', function() {
+                timeLeft = 5; // Reset to 5 seconds
+                countdownElement.textContent = timeLeft;
+                localStorage.setItem('remainingTime', timeLeft);
+                if (timer === null) {
+                    timer = setInterval(updateCountdown, 1000);
+                } else {
+                    clearInterval(timer);
+                    timer = setInterval(updateCountdown, 1000);
+                }
+            });
 
             // Clear remaining time when navigating back to rounds
             backToRoundsButton.addEventListener('click', function() {
