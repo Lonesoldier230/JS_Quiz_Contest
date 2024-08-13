@@ -81,7 +81,7 @@
         <p id="answer" class="hidden" style="font-size: 30px; color: antiquewhite;">{{ answer }}</p>
 
         <!-- Button to pass the question and reset timer -->
-        <button class="button-pass" id="time">Pass Question</button>
+        <button class="button-pass" id="pass_question">Pass Question</button>
 
         <!-- Button to navigate back to the rounds menu -->
         <a href="{% url 'round:general' %}" class="button" id="back_to_question">Back to Questions</a>
@@ -98,7 +98,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var revealButton = document.getElementById('reveal_answer');
-            var addTimeButton = document.getElementById('time');
+            var passButton = document.getElementById('pass_question');
             var answer = document.getElementById('answer');
             var countdownElement = document.getElementById('countdown');
             var buzzer = document.getElementById('buzzer');
@@ -108,6 +108,7 @@
             var additionalTime = 5;
             var timer;
             var timerRunning = false;
+            var buzzerPlayed = false; // Flag to ensure buzzer plays only once
 
             function updateCountdown() {
                 if (timeLeft > 0) {
@@ -116,7 +117,10 @@
                     localStorage.setItem("remainingTime", timeLeft);
                 } else {
                     clearInterval(timer);
-                    buzzer.play();  // Play buzzer sound when time is over
+                    if (!buzzerPlayed) {
+                        buzzer.play();  // Play buzzer sound only once
+                        buzzerPlayed = true;
+                    }
                 }
             }
 
@@ -133,7 +137,13 @@
             // Event listener for "T" key to toggle timer
             document.addEventListener('keydown', function(event) {
                 if (event.key.toLowerCase() === 't') {
-                    toggleTimer();
+                    if (timerRunning) {
+                        clearInterval(timer);
+                        timer = null; // Stop the timer
+                        timerRunning = false;
+                    } else {
+                        toggleTimer();
+                    }
                 }
             });
 
@@ -144,33 +154,37 @@
                 revealButton.style.display = 'none'; // Hide button after answer is revealed
             });
 
-            // Add time logic
-            addTimeButton.addEventListener('click', function() {
-                timeLeft += additionalTime;
-                countdownElement.textContent = timeLeft;
-                localStorage.setItem('remainingTime', timeLeft);
-                if (timeLeft > 0 && timer === null) {
-                    timer = setInterval(updateCountdown, 1000);
-                }
-            });
-
-            // Reset timer to 5 seconds when passing the question
-            addTimeButton.addEventListener('click', function() {
+            // Pass question logic
+            passButton.addEventListener('click', function() {
                 timeLeft = 5; // Reset to 5 seconds
                 countdownElement.textContent = timeLeft;
                 localStorage.setItem('remainingTime', timeLeft);
-                if (timer === null) {
-                    timer = setInterval(updateCountdown, 1000);
-                } else {
+                if (timerRunning) {
                     clearInterval(timer);
-                    timer = setInterval(updateCountdown, 1000);
+                    timer = null;
+                    timerRunning = false;
                 }
+                timer = setInterval(updateCountdown, 1000); // Start the timer again
+                buzzerPlayed = false; // Reset buzzer flag
             });
 
             // Clear remaining time when navigating back to rounds
             backToRoundsButton.addEventListener('click', function() {
                 localStorage.removeItem('remainingTime');
+                if (timerRunning) {
+                    clearInterval(timer);
+                    timer = null;
+                    timerRunning = false;
+                    buzzerPlayed = false; // Reset buzzer flag
+                }
             });
+
+            // Initialize timer state
+            if (localStorage.getItem("remainingTime")) {
+                timeLeft = parseInt(localStorage.getItem("remainingTime"), 10);
+                countdownElement.textContent = timeLeft;
+                toggleTimer(); // Start the timer if there is remaining time
+            }
         });
     </script>
 </body>
