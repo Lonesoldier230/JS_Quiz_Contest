@@ -105,9 +105,7 @@
             var backToRoundsButton = document.getElementById('back_to_question');
 
             var timeLeft = 15;
-            var additionalTime = 5;
             var timer;
-            var timerRunning = false;
             var buzzerPlayed = false; // Flag to ensure buzzer plays only once
 
             function updateCountdown() {
@@ -124,25 +122,22 @@
                 }
             }
 
-            function toggleTimer() {
-                if (timerRunning) {
-                    clearInterval(timer);
-                    timer = null;  // Set timer to null when stopped
-                } else {
-                    timer = setInterval(updateCountdown, 1000);
-                }
-                timerRunning = !timerRunning;
+            function startTimer(seconds) {
+                timeLeft = seconds;
+                countdownElement.textContent = timeLeft;
+                localStorage.setItem("remainingTime", timeLeft);
+                clearInterval(timer); // Clear any existing interval
+                timer = setInterval(updateCountdown, 1000);
             }
 
             // Event listener for "T" key to toggle timer
             document.addEventListener('keydown', function(event) {
                 if (event.key.toLowerCase() === 't') {
-                    if (timerRunning) {
+                    if (timer) {
                         clearInterval(timer);
                         timer = null; // Stop the timer
-                        timerRunning = false;
                     } else {
-                        toggleTimer();
+                        startTimer(timeLeft);
                     }
                 }
             });
@@ -150,31 +145,21 @@
             // Reveal answer logic
             revealButton.addEventListener('click', function() {
                 answer.classList.remove('hidden');
-                answer.style.display = 'block'; // Ensure the answer is displayed
                 revealButton.style.display = 'none'; // Hide button after answer is revealed
             });
 
             // Pass question logic
             passButton.addEventListener('click', function() {
-                timeLeft = 5; // Reset to 5 seconds
-                countdownElement.textContent = timeLeft;
-                localStorage.setItem('remainingTime', timeLeft);
-                if (timerRunning) {
-                    clearInterval(timer);
-                    timer = null;
-                    timerRunning = false;
-                }
-                timer = setInterval(updateCountdown, 1000); // Start the timer again
+                startTimer(5); // Reset to 5 seconds
                 buzzerPlayed = false; // Reset buzzer flag
             });
 
             // Clear remaining time when navigating back to rounds
             backToRoundsButton.addEventListener('click', function() {
                 localStorage.removeItem('remainingTime');
-                if (timerRunning) {
+                if (timer) {
                     clearInterval(timer);
                     timer = null;
-                    timerRunning = false;
                     buzzerPlayed = false; // Reset buzzer flag
                 }
             });
@@ -183,7 +168,9 @@
             if (localStorage.getItem("remainingTime")) {
                 timeLeft = parseInt(localStorage.getItem("remainingTime"), 10);
                 countdownElement.textContent = timeLeft;
-                toggleTimer(); // Start the timer if there is remaining time
+                startTimer(timeLeft); // Start the timer with remaining time
+            } else {
+                startTimer(15); // Default timer value
             }
         });
     </script>
