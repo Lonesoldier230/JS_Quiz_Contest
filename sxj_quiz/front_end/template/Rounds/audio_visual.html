@@ -101,7 +101,7 @@
                 if (timeLeft <= 0) {
                     clearInterval(timer);
                     buzzer.play(); // Play buzzer sound when time is up
-                    countdownElement.textContent = 'Time is up!';
+                    countdownElement.textContent = '0';
                 }
                 localStorage.setItem("remainingTime", timeLeft);
             }

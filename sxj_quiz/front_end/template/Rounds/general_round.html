@@ -112,7 +112,6 @@
                 if (timeLeft > 0) {
                     timeLeft--;
                     countdownElement.textContent = timeLeft;
-                    localStorage.setItem("remainingTime", timeLeft);
                 } else {
                     clearInterval(timer);
                     if (!buzzerPlayed) {
@@ -125,7 +124,6 @@
             function startTimer(seconds) {
                 timeLeft = seconds;
                 countdownElement.textContent = timeLeft;
-                localStorage.setItem("remainingTime", timeLeft);
                 clearInterval(timer); // Clear any existing interval
                 timer = setInterval(updateCountdown, 1000);
             }
@@ -165,13 +163,6 @@
             });
 
             // Initialize timer state
-            if (localStorage.getItem("remainingTime")) {
-                timeLeft = parseInt(localStorage.getItem("remainingTime"), 10);
-                countdownElement.textContent = timeLeft;
-                startTimer(timeLeft); // Start the timer with remaining time
-            } else {
-                startTimer(15); // Default timer value
-            }
         });
     </script>
 </body>

@@ -178,9 +178,11 @@
             var timerRunning = false;
 
             function updateCountdown() {
-                timeLeft--;
-                countdownElement.textContent = timeLeft;
-                if (timeLeft <= 0) {
+                if (timeLeft > 0){
+                    timeLeft--;
+                    countdownElement.textContent = timeLeft;
+                }
+                else {
                     clearInterval(timer);
                     buzzer.play(); // Play buzzer sound when time is up
                     result.textContent = 'Time is up!';

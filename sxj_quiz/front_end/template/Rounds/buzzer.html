@@ -60,7 +60,7 @@
     <div class="bottom-right-container">
         <p id="timer">Time left: <span id="time">0</span> seconds</p>
     </div>
-    
+    <audio id="buzzer" src="{% static 'sounds/buzzer.mp3' %}" preload="auto"></audio>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var revealButton = document.getElementById('reveal_answer');
@@ -68,33 +68,33 @@
             var countdownElement = document.getElementById('time');
             var nextQuestionButton = document.getElementById('next_question');
             var backToRoundsButton = document.getElementById('back_to_rounds');
+            var buzzer = document.getElementById('buzzer');
 
             var timeLeft = 15;
-            var additionalTime = 5;
+            var buzzer_played = false;
             var timer = null; // Timer starts as null, indicating it's not running
 
             function updateCountdown() {
                 if (timeLeft > 0) {
                     timeLeft--;
                     countdownElement.textContent = timeLeft;
-                    localStorage.setItem("remainingTime", timeLeft);
                 } else {
                     stopTimer(); // Stop the timer when time runs out
                     console.log("Time's up!");
+                    if(!buzzer_played){
+                        buzzer.play();
+                        buzzer_played = true;
+                    }
                 }
             }
 
             function startTimer() {
-                if (timer === null) {
-                    timer = setInterval(updateCountdown, 1000);
-                }
+                timer = setInterval(updateCountdown, 1000);
             }
 
             function stopTimer() {
-                if (timer !== null) {
-                    clearInterval(timer);
-                    timer = null;
-                }
+                clearInterval(timer);
+                timer = null;
             }
 
             function toggleTimer() {
@@ -117,36 +117,6 @@
                 answer.classList.remove('hidden');
                 revealButton.style.display = 'none'; // Hide button after answer is revealed
             });
-
-            // Add time logic
-            if (document.getElementById('add_time')) {
-                document.getElementById('add_time').addEventListener('click', function() {
-                    timeLeft += additionalTime;
-                    countdownElement.textContent = timeLeft;
-                    localStorage.setItem('remainingTime', timeLeft);
-                    if (timeLeft > 0 && timer === null) {
-                        startTimer(); // Start the timer if it's not running
-                    }
-                });
-            }
-
-            // Clear remaining time when navigating back to rounds
-            backToRoundsButton.addEventListener('click', function() {
-                stopTimer();
-                localStorage.removeItem('remainingTime');
-            });
-            
-            nextQuestionButton.addEventListener('click', function() {
-                stopTimer();
-                localStorage.setItem('remainingTime', timeLeft);
-            });
-
-            // Initialize timer from localStorage if available
-            var storedTime = localStorage.getItem("remainingTime");
-            if (storedTime) {
-                timeLeft = parseInt(storedTime);
-                countdownElement.textContent = timeLeft;
-            }
         });
     </script>
 </body>

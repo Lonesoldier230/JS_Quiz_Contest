@@ -1,85 +1,155 @@
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var revealButton = document.getElementById('reveal_answer');
-        var answer = document.getElementById('answer');
-        var countdownElement = document.getElementById('countdown');
-        var nextQuestionButton = document.getElementById('next_question');
-        var backToRoundsButton = document.getElementById('back_to_rounds');
-        var buzzerSound = document.getElementById('buzzer-sound');
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
 
-        var initialTime = 15; // Initial time value
-        var timeLeft = initialTime;
-        var timerRunning = false;
-        var timerInterval = null;
-
-        function updateCountdown() {
-            timeLeft--;
-            countdownElement.textContent = timeLeft;
-            if (timeLeft <= 0) {
-                stopTimer();
-                buzzerSound.play(); // Play buzzer sound when time's up
-                console.log("Time's up!");
-            }
-            localStorage.setItem("remainingTime", timeLeft);
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Page</title>
+    <link rel="stylesheet" href="{% static 'style/styles.css' %}">
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            box-sizing: border-box;
         }
-
-        function startTimer() {
-            if (!timerRunning) {
-                timerInterval = setInterval(updateCountdown, 1000);
-                timerRunning = true;
-                console.log("Timer started.");
-            }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            height: auto;
+            box-sizing: border-box;
+            background-color: #42464f;
         }
-
-        function stopTimer() {
-            if (timerRunning) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-                timerRunning = false;
-                console.log("Timer stopped.");
-            }
+        h1, h2, p {
+            color: antiquewhite;
         }
-
-        function resetTimer() {
-            stopTimer();
-            timeLeft = initialTime;
-            countdownElement.textContent = timeLeft;
-            localStorage.removeItem('remainingTime');
+        .question-image {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
         }
+        .button {
+            display: block;
+            width: 100%;
+            max-width: 500px;
+            margin: 10px 0;
+            padding: 15px;
+            font-size: 18px;
+            text-align: center;
+            cursor: pointer;
+            box-sizing: border-box;
+            background: linear-gradient(to right, #4dffaf, #357bbc);
+            color: #2f0c0b;
+            border: none;
+            border-radius: 18px;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #4882cd;
+        }
+        .hidden {
+            display: none;
+        }
+        .bottom-right-container {
+            position: absolute;
+        }
+    </style>
+    </head>
+    
+    <body class="body" style="background-image:url('{% static "images/quiz.png" %}')">
+        <div class="container">
+            {% if file %}
+                <img src="{{ file }}" alt="Question Image" class="question-image">
+            {% endif %}
+            <p id="question" style="font-size: 45px;">{{ question }}</p>
+            <button class="button" id="reveal_answer">Reveal Answer</button>
+            <p id="answer" class="hidden" style="font-size: 30px;">{{ answer }}</p>
+            {% if iter < limit %} <a href="{% url 'round:mix' subject=subject iter=iter|add:'1' %}" class="button"
+                id="next_question">Next Question</a>
+            {% endif %}
+            <a href="{% url 'round:mix-main' %}" class="button" id="back_to_rounds">Back to Mixed Bag</a>
+        </div>
+        <div class="bottom-right-container">
+            <h2>
+                <p id="timer">Time left: <span id="countdown">10</span> seconds</p>
+            </h2>
+        </div>
+        <audio id="buzzer-sound" src="{% static 'sounds/buzzer.mp3' %}" preload="auto"></audio>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var revealButton = document.getElementById('reveal_answer');
+                var answer = document.getElementById('answer');
+                var countdownElement = document.getElementById('countdown');
+                var nextQuestionButton = document.getElementById('next_question');
+                var backToRoundsButton = document.getElementById('back_to_rounds');
+                var buzzerSound = document.getElementById('buzzer-sound');
 
-        document.addEventListener('keydown', function (event) {
-            if (event.key === 't') {
-                console.log("T pressed");
-                if (timerRunning) {
-                    stopTimer();
-                } else {
-                    startTimer();
+                var timeLeft = 10;
+                var timerRunning = false;
+                var timerInterval = null;
+
+                function updateCountdown() {
+                    if(timeLeft > 0){
+                        timeLeft--;
+                        countdownElement.textContent = timeLeft;
+                    }
+                    else{
+                        stopTimer();
+                        buzzerSound.play(); // Play buzzer sound when time's up
+                        console.log("Time's up!");
+                    }
                 }
-            }
-        });
 
-        backToRoundsButton.addEventListener('click', function () {
-            stopTimer();
-            localStorage.removeItem('remainingTime');
-        });
+                function startTimer() {
+                    if (!timerRunning) {
+                        timerInterval = setInterval(updateCountdown, 1000);
+                        timerRunning = true;
+                        console.log("Timer started.");
+                    }
+                }
 
-        revealButton.addEventListener('click', function () {
-            answer.classList.remove('hidden');
-            answer.style.display = 'block';
-            revealButton.style.display = 'none';
-        });
+                function stopTimer() {
+                    if (timerRunning) {
+                        clearInterval(timerInterval);
+                        timerInterval = null;
+                        timerRunning = false;
+                        console.log("Timer stopped.");
+                    }
+                }
 
-        nextQuestionButton.addEventListener('click', function () {
-            resetTimer(); // Reset the timer when moving to the next question
-        });
+                document.addEventListener('keydown', function (event) {
+                    if (event.key === 't') {
+                        console.log("T pressed");
+                        if (timerRunning) {
+                            stopTimer();
+                        } else {
+                            startTimer();
+                        }
+                    }
+                });
 
-        // Initialize timer state
-        if (localStorage.getItem("remainingTime")) {
-            timeLeft = parseInt(localStorage.getItem("remainingTime"), 10);
-            countdownElement.textContent = timeLeft;
-            startTimer();
-        } else {
-            countdownElement.textContent = timeLeft; // Set initial time
-        }
-    });
-</script>
+                backToRoundsButton.addEventListener('click', function () {
+                    stopTimer();
+                });
+
+                revealButton.addEventListener('click', function () {
+                    answer.classList.remove('hidden');
+                    answer.style.display = 'block';
+                    revealButton.style.display = 'none';
+                });
+
+                nextQuestionButton.addEventListener('click', function () {
+                    stopTimer();
+                });
+            });
+        </script>
+    </body>
+    
+</html>
