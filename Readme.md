@@ -44,6 +44,10 @@ docker-compose build
 ```
 - This command will build the necessary services as defined in the `docker-compose.yml` file.
 
+**Note**: Once the initial build is complete, it is not necessary to rebuild the application unless changes are made to
+the program or its dependencies. Subsequent starts or restarts of the application can be achieved using the
+`docker-compose up` command without rebuilding.
+
 ### 5. **Run the Application**
 - After building, start the application:
 ```bash
