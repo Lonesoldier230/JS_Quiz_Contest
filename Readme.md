@@ -40,7 +40,7 @@ DB_PASSWORD = your_password
 ### 4. **Build the Application**
 - With the environment variables set up, build the application using Docker Compose:
 ```bash
-docker-compose up --build
+docker-compose build
 ```
 - This command will build the necessary services as defined in the `docker-compose.yml` file.
 
