@@ -12,9 +12,9 @@ cd JS_Quiz_Contest
 ```
 
 ### 2. **Create the `postgres_keys.env` File**
-- In the root directory of the project, create a `postgres_keys.env` file:
+- In the /sxj_quiz directory of the project, create a `postgres_keys.env`:
 ```bash
-touch postgres_keys.env
+touch .env
 ```
 - Open the `postgres_keys.env` file and add the following content, replacing the placeholders with your actual database
 credentials:
@@ -25,7 +25,7 @@ POSTGRES_PASSWORD = your_password
 ```
 
 ### 3. **Create the `.env` File**
-- In the root directory, create a `.env` file:
+- In the /sxj_quiz directory, create a `.env` file:
 ```bash
 touch .env
 ```
