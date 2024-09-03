@@ -1,5 +1,5 @@
 A Quiz app for JS Quiz contest of 
-**St.xavier's School Jawalakhel**
+**St. Xavier's School Jawalakhel**
 Here's the final version of the setup guide, including instructions on how to run the application.
 
 ### Complete Setup Guide for JS_Quiz_Contest Repository
