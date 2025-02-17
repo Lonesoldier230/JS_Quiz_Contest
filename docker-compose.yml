@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   db:
-    image: postgres:12
+    image: postgres
     restart: unless-stopped
     ports:
       - "5432:5432"
