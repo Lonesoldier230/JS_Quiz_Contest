@@ -58,6 +58,9 @@ docker-compose up
 ### 6. **Access the Application**
 - Once the application is running, you can access it by navigating to `http://0.0.0.0` or `http://localhost` in your web
 browser.
+or the default ipv4 of your device
+
+
 
 ### 7. **Stopping the Application**
 - To stop the application and remove the containers, run:
