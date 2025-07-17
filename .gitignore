@@ -3,8 +3,9 @@ db.sqlite3
 sxj-quiz/
 *.env
 *postgres_keys.env
-.vscode/
+*.vscode/
 JS_Quiz
 *media/
 *staticfiles/
 *migrations/
+.DS_Store
