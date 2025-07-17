@@ -72,6 +72,21 @@ docker-compose down
 - Any changes you make to the code on your local machine will be automatically reflected inside the container, making
 development smoother.
 
+
+### 9. **Create a Django Superuser**
+
+To manage the quiz system through the Django admin panel, create a superuser:
+
+```bash
+docker-compose exec web python manage.py createsuperuser
+```
+Follow the prompts to enter a username, email, and password.
+
+Once created, you can access the Django admin panel at:
+```
+http://localhost/admin/
+```
+
 ### Conclusion
 This guide provides all the necessary steps to set up, build, run, and access the JS_Quiz_Contest application using
 Docker. By following these instructions, you can ensure that the application runs smoothly and is easily accessible via
