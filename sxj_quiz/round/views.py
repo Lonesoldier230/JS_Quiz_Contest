@@ -72,7 +72,7 @@ def mix_bag(request, subject, iter):
 # Multiple/<int:pk>
 def m_choice(request, pk):
     try:
-        zeek = Multiple.objects.get(pk = pk)
+        zeek = Multiple.objects.all()[pk - 1]
     except:
         return render(request, '404.html')
     
@@ -102,7 +102,7 @@ def mix_main(request):
 # Recall/<int:pk>
 def recall(request, pk):
     try:
-        db = Memory.objects.get(pk = pk)
+        db = Memory.objects.all()[pk - 1]
     except:
         print()
         return render(request, 'Rounds/questions_finished.html')
